@@ -1,0 +1,83 @@
+.homeLogin {
+    background-image: url("../../assets/cinefondo.png");
+    background-size: cover;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login {
+    width: 800px;
+    height: 450px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #714b1ad1;
+    border-radius: 20px;
+    background-image: url("../../assets/ticket.png");
+    background-size: cover;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    box-shadow: 1px 1px 15px 1px black;
+}
+
+.div_form {
+    height: 320px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    padding-right: 160px;
+}
+
+.texto {
+    font-weight: 700;
+    font-size: 26px;
+    line-height: 30px;
+}
+
+.input {
+    width: 310px;
+    height: 34px;
+    background: var(--amarillo);
+    border: 3px solid #714b1a;
+    border-radius: 10px;
+    font-size: 17px;
+    line-height: 43px;
+    padding-left: 15px;
+}
+
+.boton {
+    width: 180px;
+    height: 40px;
+    border-radius: 10px;
+    font-size: 18px;
+    border: none;
+    background-color: var(--amarillo);
+    box-shadow: 0px 1px 3px 1px var(--negro);
+}
+
+.boton:hover {
+    color: var(--blanco);
+    background-color: var(--marron);
+}
+
+.div_noTienesCuenta {
+    height: 30px;
+    color: var(--marron);
+    text-decoration: none;
+    margin-right: 5px;
+}
+
+.div_registrate {
+    line-height: 27px;
+    color: var(--negro);
+}
