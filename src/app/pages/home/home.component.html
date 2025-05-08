@@ -1,1 +1,13 @@
-<p>home works!</p>
+<div class="home">
+    <h1>Bienvenido a CineClub 🎬</h1>
+
+    <div *ngIf="userData; else noUser">
+        <p><strong>Nombre:</strong> {{ userData.nombre }} {{ userData.apellidos }}</p>
+        <p><strong>Correo:</strong> {{ userData.email }}</p>
+        <p><strong>Fecha de Nacimiento:</strong> {{ userData.fecha_nacimiento }}</p>
+    </div>
+
+    <ng-template #noUser>
+        <p>No hay usuario cargado. Redirigiendo...</p>
+    </ng-template>
+</div>

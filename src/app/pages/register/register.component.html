@@ -1,0 +1,60 @@
+<div class="paginaRegistro">
+
+    <div class="registro">
+        <a class="back" (click)="irALogin()">
+            <i class="fa-solid fa-arrow-left-long"></i>
+        </a>        
+
+        <form class="div_form" #registroForm="ngForm" (ngSubmit)="registrarse()">
+            <div class="texto">Completa los datos</div>
+            <div>
+                <input class="input" type="text" name="name" [(ngModel)]="nuevoUsuario.nombre" #nombre="ngModel"
+                    placeholder="Nombre" [ngClass]="{'is-invalid': registroForm.submitted && nombre.invalid }" required>
+                <div class="invalid-feedback mb-0 mt-0 col" *ngIf="registroForm.submitted && nombre.invalid">
+                    <p *ngIf="nombre.errors?.['required']">Campo obligatorio</p>
+                </div>
+            </div>
+            <div>
+                <input class="input" type="text" name="last_name" [(ngModel)]="nuevoUsuario.apellidos"
+                    #apellidos="ngModel" placeholder="Apellidos"
+                    [ngClass]="{'is-invalid': registroForm.submitted && apellidos.invalid }" required>
+                <div class="invalid-feedback mb-0 mt-0 col" *ngIf="registroForm.submitted && apellidos.invalid">
+                    <p *ngIf="apellidos.errors?.['required']">Campo obligatorio</p>
+                </div>
+            </div>
+            <div>
+                <input class="input" type="text" name="email" [(ngModel)]="nuevoUsuario.email" #email="ngModel"
+                    placeholder="Correo" [ngClass]="{'is-invalid': registroForm.submitted && email.invalid }" required
+                    email>
+                <div class="invalid-feedback mb-0 mt-0 col" *ngIf="registroForm.submitted && email.invalid">
+                    <div *ngIf="email.errors?.['required']">Campo obligatorio</div>
+                </div>
+                <div class="invalid-feedback mb-0 mt-0" *ngIf="registroForm.dirty && email.invalid">
+                    <div *ngIf="email.errors?.['email']">Dirección email incorrecta</div>
+                </div>
+            </div>
+            <div>
+                <input class="input" type="password" name="password" [(ngModel)]="nuevoUsuario.password"
+                    #password="ngModel" placeholder="Contraseña"
+                    [ngClass]="{'is-invalid': registroForm.submitted && password.invalid }" minlength="8" required>
+                <div class="invalid-feedback mb-0 mt-0 col" *ngIf="registroForm.submitted && password.invalid">
+                    <div *ngIf="password.errors?.['required']">Campo obligatorio</div>
+                </div>
+                <div *ngIf="password.errors?.['minlength']">
+                    <div class="text-danger">8 caracteres mínimo</div>
+                </div>
+            </div>
+            <div>
+                <input class="input" type="date" name="fecha_nacimiento" [(ngModel)]="nuevoUsuario.fecha_nacimiento"
+                    #fecha_nacimiento="ngModel"
+                    [ngClass]="{'is-invalid': registroForm.submitted && fecha_nacimiento.invalid }" minlength="8"
+                    required>
+                <div class="invalid-feedback mb-0 mt-0 col" *ngIf="registroForm.submitted && fecha_nacimiento.invalid">
+                    <div *ngIf="fecha_nacimiento.errors?.['required']">Campo obligatorio</div>
+                </div>
+            </div>
+            <button class="boton">REGISTRARSE</button>
+        </form>
+    </div>
+
+</div>

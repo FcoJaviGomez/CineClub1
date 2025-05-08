@@ -1,46 +1,52 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-
-// Modelo de usuario (a futuro puedes mejorarlo con interfaces)
-export class Usuario {
-  constructor(
-    public id: number,
-    public nombre: string,
-    public email: string,
-    public password: string,
-    public rol: string,
-    public otroCampo?: string
-  ) {}
-}
+import { SupabaseService } from '../../services/supabase.service';
 
 @Component({
   selector: 'app-login',
-  standalone: true, // 👈 Importante
-  imports: [CommonModule, FormsModule],
+  standalone: true,
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
+  imports: [CommonModule, FormsModule]
 })
 export class LoginComponent {
-  public usuario: Usuario = new Usuario(0, "", "", "", "");
-  public validacion: any = ["", ""];
+  usuario = {
+    email: '',
+    password: ''
+  };
 
-  constructor(private router: Router) {}
+  validacion: [string, boolean] = ['', true];
 
-  iniciarSesion() {
-    if (this.validar(this.usuario)) {
-      // Aquí luego conectarás Supabase
-      console.log("Login válido. Usuario:", this.usuario);
+  constructor(
+    private router: Router,
+    private supabaseService: SupabaseService
+  ) { }
 
-      // Simular navegación después de login correcto
-      this.router.navigate(['/']);
-    } else {
-      this.validacion = ["Datos incompletos", false];
+  async iniciarSesion() {
+    const { email, password } = this.usuario;
+
+    try {
+      const { data, error } = await this.supabaseService.login(email, password);
+
+      if (error) {
+        console.error('Error al iniciar sesión:', error.message);
+        this.validacion = [error.message, false];
+        return;
+      }
+
+      console.log('Inicio de sesión exitoso:', data);
+
+      this.router.navigate(['/home']);
+
+    } catch (error) {
+      console.error('Error inesperado al iniciar sesión:', error);
+      this.validacion = ['Error inesperado al iniciar sesión', false];
     }
   }
 
-  validar(user: Usuario): boolean {
-    return user.email !== "" && user.password !== "";
+  irARegistro() {
+    this.router.navigate(['/registro']);
   }
 }

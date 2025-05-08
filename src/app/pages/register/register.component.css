@@ -1,4 +1,4 @@
-.homeLogin {
+.paginaRegistro {
     background-image: url("../../assets/cinefondo.png");
     background-size: cover;
     background-size: 100%;
@@ -12,41 +12,52 @@
     height: 100vh;
 }
 
-.login {
-    width: 800px;
-    height: 450px;
+.registro {
+    width: 350px;
+    height: 650px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    padding-top: 72px;
     align-items: center;
     background-color: #714b1ad1;
     border-radius: 20px;
-    background-image: url("../../assets/ticket.png");
+    background-image: url("../../assets/ticket1.png");
     background-size: cover;
-    background-size: 100%;
+    background-size: 90%;
     background-repeat: no-repeat;
     background-position: center center;
     box-shadow: 1px 1px 15px 1px black;
 }
 
+.back {
+    font-size: 20px;
+    color: var(--marron);
+}
+
+.back:hover {
+    color: var(--blanco);
+    cursor: pointer;
+}
+
 .div_form {
-    height: 320px;
+    height: 330px;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
-    padding-right: 160px;
 }
 
 .texto {
     font-weight: 700;
-    font-size: 26px;
-    line-height: 30px;
+    font-size: 20px;
+    margin-top: 10px;
+    /* line-height: 30px; */
 }
 
+
 .input {
-    width: 310px;
-    height: 34px;
+    width: 200px;
+    height: 30px;
     background: var(--amarillo);
     border: 3px solid #714b1a;
     border-radius: 10px;
@@ -57,33 +68,16 @@
 
 .boton {
     width: 180px;
-    height: 40px;
+    height: 35px;
     border-radius: 10px;
     font-size: 18px;
     border: none;
     background-color: var(--amarillo);
-    box-shadow: 0px 1px 3px 1px var(--negro);
+    box-shadow: 0px 1px 3px 1px black;
+    cursor: pointer;
 }
 
 .boton:hover {
     color: var(--blanco);
     background-color: var(--marron);
-    cursor: pointer;
-}
-
-.div_noTienesCuenta {
-    height: 30px;
-    color: var(--marron);
-    text-decoration: none;
-    margin-right: 5px;
-}
-
-.div_registrate {
-    line-height: 27px;
-    color: var(--negro);
-    cursor: pointer;
-}
-
-.div_registrate:hover{
-    color: var(--blanco)
 }
