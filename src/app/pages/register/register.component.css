@@ -1,15 +1,15 @@
 .paginaRegistro {
-    background-image: url("../../../assets/cinefondo.png");
+   background-image: url("../../../assets/cinefondo.png");
     background-size: cover;
-    background-size: 100%;
     background-repeat: no-repeat;
     background-position: center center;
     background-attachment: fixed;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 .registro {
@@ -80,4 +80,17 @@
 .boton:hover {
     color: var(--blanco);
     background-color: var(--marron);
+}
+
+
+@media (max-width: 480px) {
+
+    .registro{
+        width: 98%;
+        height: 600px;
+        background-size: 85%;
+    }
+    .back{
+        margin-top: -20px;
+    }
 }
