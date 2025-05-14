@@ -1,5 +1,5 @@
 [build]
-  publish = "dist/mi-app-peliculas"
+  publish = "dist/mi-app-peliculas/browser"
   command = "ng build --configuration production"
 
 [[redirects]]
