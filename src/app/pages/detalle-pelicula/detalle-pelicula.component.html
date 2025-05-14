@@ -1,0 +1,50 @@
+<div class="body" *ngIf="infoPelicula && actores">
+  <div class="detalle-card">
+    <!-- Imagen más pequeña -->
+    <div class="detalle-imagen">
+      <img [src]="'https://image.tmdb.org/t/p/w500' + infoPelicula.poster_path"
+           class="img-pelicula"
+           alt="{{ infoPelicula.title }}">
+    </div>
+
+    <!-- Detalles a la derecha -->
+    <div class="detalle-info">
+      <h2>{{ infoPelicula.title }}</h2>
+      <p class="tagline" *ngIf="infoPelicula.tagline">"{{ infoPelicula.tagline }}"</p>
+      <p>{{ infoPelicula.overview }}</p>
+
+      <p><strong>Duración:</strong> {{ infoPelicula.runtime }} min</p>
+      <p><strong>Fecha de estreno:</strong> {{ infoPelicula.release_date }}</p>
+      <p><strong>Géneros:</strong>
+        <span *ngFor="let genre of infoGenres; let i = index">
+          {{ genre.name }}<span *ngIf="i < infoGenres.length - 1">, </span>
+        </span>
+      </p>
+    </div>
+  </div>
+
+  <!-- Sección de actores -->
+  <div class="actores">
+    <h3>Reparto principal</h3>
+
+    <section class="actores_div">
+      <div *ngFor="let actor of actores">
+        <div class="actor">
+          <img [src]="actor.profile_path 
+            ? 'https://image.tmdb.org/t/p/w500' + actor.profile_path 
+            : 'assets/sin-foto.png'"
+            class="actor_imagen">
+          <div class="actor_nombre">{{ actor.name }}</div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- Indicador de carga -->
+<div class="body" *ngIf="!infoPelicula || !actores">
+  <div class="loading">
+    <div class="spinner"></div>
+    <p>Cargando...</p>
+  </div>
+</div>

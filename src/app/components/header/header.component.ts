@@ -16,4 +16,8 @@ export class HeaderComponent {
     this.router.navigate(['/login']);
   }
 
+  irHome() {
+    this.router.navigate(['/home']);
+  }
+
 }

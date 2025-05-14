@@ -1,13 +1,9 @@
-<!-- Header solo si no estamos en login o registro -->
-<header *ngIf="mostrarLayout()">
-    <app-header></app-header>
-  </header>
-  
-  <!-- El contenido principal -->
-  <router-outlet></router-outlet>
-  
-  <!-- Footer solo si no estamos en login o registro -->
-  <footer *ngIf="mostrarLayout()">
-    <app-footer></app-footer>
-  </footer>
-  
+<div *ngIf="mostrarLayout$ | async">
+  <app-header></app-header>
+</div>
+
+<router-outlet></router-outlet>
+
+<div *ngIf="mostrarLayout$ | async">
+  <app-footer></app-footer>
+</div>

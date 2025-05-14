@@ -1,5 +1,5 @@
 .homeLogin {
-    background-image: url("../../assets/cinefondo.png");
+    background-image: url("../../../assets/cinefondo.png");
     background-size: cover;
     background-size: 100%;
     background-repeat: no-repeat;
@@ -21,7 +21,7 @@
     align-items: center;
     background-color: #714b1ad1;
     border-radius: 20px;
-    background-image: url("../../assets/ticket.png");
+    background-image: url("../../../assets/ticket.png");
     background-size: cover;
     background-size: 100%;
     background-repeat: no-repeat;

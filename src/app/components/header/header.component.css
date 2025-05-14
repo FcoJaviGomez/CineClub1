@@ -17,6 +17,12 @@
     gap: 5px;
     text-decoration: none;
     color: var(--negro);
+    cursor: grab;
+    cursor: -webkit-grab;
+}
+
+.header_div:hover{
+    color: var(--blanco);
 }
 
 .icono {

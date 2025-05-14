@@ -1,11 +1,23 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './pages/login/login.component';
-import { RegisterComponent } from './pages/register/register.component';
-import { HomeComponent } from './pages/home/home.component';
 
 export const routes: Routes = [
-    { path: '', component: LoginComponent },
-    { path: 'login', component: LoginComponent },
-    { path: 'registro', component: RegisterComponent },
-    { path: 'home', component: HomeComponent }
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+
+  {
+    path: 'login',
+    loadComponent: () => import('./pages/login/login.component').then(m => m.LoginComponent)
+  },
+  {
+    path: 'registro',
+    loadComponent: () => import('./pages/register/register.component').then(m => m.RegisterComponent)
+  },
+  {
+    path: 'home',
+    loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent)
+  },
+  {
+  path: 'detalle-pelicula/:id',
+  loadComponent: () => import('./pages/detalle-pelicula/detalle-pelicula.component').then(m => m.DetallePeliculaComponent)
+  }
+
 ];

@@ -1,28 +1,47 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common'; 
-import { RouterOutlet, Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
+import { filter } from 'rxjs/operators';
+
+import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { RouterOutlet } from '@angular/router';
+
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
-import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
     CommonModule,
+    HttpClientModule,
     RouterOutlet,
     HeaderComponent,
-    FooterComponent,
-    RouterModule  
+    FooterComponent
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+  mostrarLayout$ = new BehaviorSubject<boolean>(true);
+
   constructor(public router: Router) {}
 
-  // Función que nos dice si mostrar o no
-  mostrarLayout(): boolean {
-    return this.router.url !== '/login' && this.router.url !== '/registro';
+  ngOnInit() {
+    // Verificar la URL cuando se inicializa
+    this.actualizarLayout(this.router.url);
+
+    // Y también al cambiar de ruta
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: any) => {
+      this.actualizarLayout(event.urlAfterRedirects);
+    });
+  }
+
+  private actualizarLayout(url: string) {
+    const ocultar =  url === '/login' || url === '/registro';
+    this.mostrarLayout$.next(!ocultar);
   }
 }

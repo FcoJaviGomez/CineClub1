@@ -1,13 +1,52 @@
-<div class="home">
-    <h1>Bienvenido a CineClub 🎬</h1>
+<!-- Cuerpo principal: se muestra si ya se cargaron los datos -->
+<body class="body" *ngIf="!cargando && peliculasActuales.length && peliculasPopulares.length">
 
-    <div *ngIf="userData; else noUser">
-        <p><strong>Nombre:</strong> {{ userData.nombre }} {{ userData.apellidos }}</p>
-        <p><strong>Correo:</strong> {{ userData.email }}</p>
-        <p><strong>Fecha de Nacimiento:</strong> {{ userData.fecha_nacimiento }}</p>
+  <!-- Botón para recargar películas -->
+  <a class="btn btn-outline-warning" (click)="cargarPeliculas()" role="button">
+    Actualizar datos
+  </a>
+
+  <!-- Sección de películas populares -->
+  <div class="populares">
+    <div class="populares_texto">POPULARES</div>
+    <section class="populares_peliculas" #scrollContainer>
+  <a *ngFor="let peliculaPopular of peliculasPopulares"
+     [routerLink]="['/detalle-pelicula', peliculaPopular.id]">
+    <div class="populares_card">
+      <img *ngIf="peliculaPopular.poster_path"
+           [src]="'https://image.tmdb.org/t/p/w500' + peliculaPopular.poster_path"
+           alt="{{ peliculaPopular.title }}"
+           class="populares_imagen">
     </div>
+  </a>
+</section>
 
-    <ng-template #noUser>
-        <p>No hay usuario cargado. Redirigiendo...</p>
-    </ng-template>
+  </div>
+
+  <!-- Sección de películas en cartelera -->
+  <div class="cartelera">
+    <div class="cartelera_texto">CARTELERA</div>
+    <section class="cartelera_peliculas">
+      <a *ngFor="let peliculaActual of peliculasActuales"
+         style="text-decoration: none;"
+         [routerLink]="['/detalle-pelicula', peliculaActual.id]">
+        <div class="cartelera_card">
+          <img *ngIf="peliculaActual.poster_path"
+               [src]="'https://image.tmdb.org/t/p/w500' + peliculaActual.poster_path"
+               alt="{{ peliculaActual.title }}"
+               class="cartelera_imagen">
+          <div class="cartelera_titulo">{{ peliculaActual.title }}</div>
+        </div>
+      </a>
+    </section>
+  </div>
+
+</body>
+
+<!-- Indicador de carga -->
+<div class="body" *ngIf="cargando">
+  <button class="btn btn-warning" type="button" disabled>
+    <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+    Cargando...
+  </button>
 </div>

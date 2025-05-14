@@ -1,47 +1,80 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-import { SupabaseService } from '../../services/supabase.service';
+import { RouterModule } from '@angular/router';
+
+import { MoviesService } from '../../services/movies.service';
+import { Movie } from '../../models/movie.model';
 
 @Component({
   selector: 'app-home',
   standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule
+  ],
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css'],
-  imports: [CommonModule]
+  styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
-  userData: any = null;
+export class HomeComponent implements OnInit, AfterViewInit {
+  peliculasPopulares: Movie[] = [];
+  peliculasActuales: Movie[] = [];
+  cargando = true;
 
-  constructor(
-    private supabaseService: SupabaseService,
-    private router: Router
-  ) { }
+  @ViewChild('scrollContainer') scrollContainer!: ElementRef;
 
-  async ngOnInit() {
-    try {
-      const { data, error } = await this.supabaseService.getUser();
+  constructor(private moviesService: MoviesService) {}
 
-      if (error || !data?.user) {
-        console.error('No hay usuario autenticado, redirigiendo al login.');
-        this.router.navigate(['/login']);
-        return;
+  ngOnInit() {
+    this.cargarPeliculas();
+  }
+
+  ngAfterViewInit() {
+    this.activarScrollConArrastre(this.scrollContainer.nativeElement);
+  }
+
+  cargarPeliculas() {
+    this.cargando = true;
+    this.moviesService.getPopularMovies().subscribe({
+      next: (response) => {
+        this.peliculasActuales = response.results.slice(0, 6);
+        this.peliculasPopulares = response.results.slice(6);
+        this.cargando = false;
+      },
+      error: (err) => {
+        console.error('Error al cargar películas', err);
+        this.cargando = false;
       }
+    });
+  }
 
-      // Guardamos los datos del usuario
-      this.userData = {
-        email: data.user.email,
-        nombre: data.user.user_metadata?.['nombre'] || '',
-        apellidos: data.user.user_metadata?.['apellidos'] || '',
-        fecha_nacimiento: data.user.user_metadata?.['fecha_nacimiento'] || ''
-      };
+  activarScrollConArrastre(element: HTMLElement) {
+    let isDown = false;
+    let startX: number;
+    let scrollLeft: number;
 
+    element.addEventListener('mousedown', (e) => {
+      isDown = true;
+      element.classList.add('active');
+      startX = e.pageX - element.offsetLeft;
+      scrollLeft = element.scrollLeft;
+    });
 
-      console.log('Usuario cargado:', this.userData);
+    element.addEventListener('mouseleave', () => {
+      isDown = false;
+      element.classList.remove('active');
+    });
 
-    } catch (error) {
-      console.error('Error inesperado al cargar el usuario:', error);
-      this.router.navigate(['/login']);
-    }
+    element.addEventListener('mouseup', () => {
+      isDown = false;
+      element.classList.remove('active');
+    });
+
+    element.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - element.offsetLeft;
+      const walk = (x - startX) * 1.5; // Ajusta la velocidad si quieres
+      element.scrollLeft = scrollLeft - walk;
+    });
   }
 }

@@ -1,8 +1,115 @@
-.home {
+.body {
+    width: 100%;
+    min-height: 78vh;
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
-    height: 78vh;
-    background-color: #f0f0f0;
+    align-items: center;
+    background-color: var(--fondo);
+    padding-top: 30px;
 }
+
+.populares {
+    width: 70vw;
+    height: 350px;
+    margin-top: 50px;
+    margin-bottom: 200px;
+    background-color: #7b4911b7;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.populares_texto {
+    font-weight: bolder;
+    margin-bottom: 5px;
+}
+
+.populares_peliculas {
+     max-height: 300px;
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    cursor: grab;
+    cursor: -webkit-grab;
+}
+
+.populares_peliculas.active {
+  cursor: grabbing;
+  cursor: -webkit-grabbing;
+}
+
+.populares_peliculas::-webkit-scrollbar {
+    width: 0;
+}
+
+.populares_card {
+    flex: 0 0 auto;
+    height: 280px;
+    min-width: 220px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px;
+    border-radius: 5px;
+}
+
+
+.populares_imagen {
+    height: 280px;
+    width: 220px;
+    border-radius: 5px;
+}
+
+
+.cartelera {
+    width: 70vw;
+    min-height: 170px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 80px;
+}
+
+.cartelera_texto {
+    font-weight: bolder;
+    font-size: 40px;
+    margin-bottom: 15px;
+}
+
+.cartelera_peliculas {
+    min-height: 100px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.cartelera_card {
+    height: 400px;
+    width: 310px;
+    margin-bottom: 50px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.cartelera_imagen {
+    height: 400px;
+    width: 300px;
+    border-radius: 5px;
+}
+
+.cartelera_titulo {
+    font-size: 15px;
+    color: var(--negro);
+}
+
+.cartelera_card:hover {
+    transform: scale(1.1);
+}
+  
