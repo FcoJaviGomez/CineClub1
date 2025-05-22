@@ -1,6 +1,7 @@
 // src/app/supabase.service.ts
 import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { Session } from '@supabase/supabase-js';
 
 // Configuración de Supabase
 const supabaseUrl = 'https://tcbplmfcfwkjvgrpnjxr.supabase.co';
@@ -55,5 +56,24 @@ export class SupabaseService {
     // Obtener el usuario actualmente autenticado
     getUser() {
         return this.supabase.auth.getUser();
+    }
+    // Verificar email con el token (después de hacer clic en el enlace del correo)
+    async verifyEmail(email: string, token: string) {
+        return await this.supabase.auth.verifyOtp({
+            type: 'signup',
+            email,
+            token
+        });
+    }
+
+    async setSession(session: Session) {
+        await this.supabase.auth.setSession({
+            access_token: session.access_token,
+            refresh_token: session.refresh_token
+        });
+    }
+
+    async getSession() {
+        return await this.supabase.auth.getSession();
     }
 }

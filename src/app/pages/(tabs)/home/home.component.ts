@@ -2,8 +2,8 @@ import { Component, OnInit, AfterViewInit, ElementRef, ViewChild } from '@angula
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
-import { MoviesService } from '../../services/movies.service';
-import { Movie } from '../../models/movie.model';
+import { MoviesService } from '../../../services/movies.service';
+import { Movie } from '../../../models/movie.model';
 
 @Component({
   selector: 'app-home',

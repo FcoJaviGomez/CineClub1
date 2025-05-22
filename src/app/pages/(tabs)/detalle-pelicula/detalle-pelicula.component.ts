@@ -3,10 +3,10 @@ import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
-import { MoviesService } from '../../services/movies.service';
-import { Movie } from '../../models/movie.model';
+import { MoviesService } from '../../../services/movies.service';
+import { Movie } from '../../../models/movie.model';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-detalle-pelicula',
