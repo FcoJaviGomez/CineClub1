@@ -1,3 +1,19 @@
-<div class="verificacion">
-    <h2>{{ message }}</h2>
+<div class="verificacion-container">
+  <div class="verificacion-card">
+
+    <div *ngIf="loading" class="estado info">
+      <p>🔄 Verificando tu correo, por favor espera...</p>
+    </div>
+
+    <div *ngIf="!loading && success" class="estado success">
+      <p>✅ ¡Correo verificado correctamente!</p>
+      <p>Pulsa el botón para iniciar sesión.</p>
+      <a routerLink="/login" class="btn">Ir al login</a>
+    </div>
+
+    <div *ngIf="!loading && error" class="estado error">
+      <p>❌ {{ message }}</p>
+    </div>
+
+  </div>
 </div>

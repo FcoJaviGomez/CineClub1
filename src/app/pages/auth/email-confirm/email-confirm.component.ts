@@ -1,53 +1,66 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { SupabaseService } from '../../../services/supabase.service';
-import { Session } from '@supabase/supabase-js';
+import { environment } from '../../../../environments/environment';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-email-confirm',
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './email-confirm.component.html',
   styleUrls: ['./email-confirm.component.css']
 })
 export class EmailConfirmComponent implements OnInit {
   message = 'Verificando correo...';
+  loading = false;
+  success = false;
+  error = false;
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     private supabaseService: SupabaseService
-  ) { }
+  ) {}
 
-  async ngOnInit() {
+  ngOnInit(): void {
+    this.confirmEmail();
+  }
+
+  private async confirmEmail(): Promise<void> {
+    this.loading = true;
+
     const token = this.route.snapshot.queryParamMap.get('confirmation_token');
     const email = this.route.snapshot.queryParamMap.get('email');
 
-    if (token && email) {
-      try {
-        const { data, error } = await this.supabaseService.verifyEmail(email, token);
-
-        if (error) {
-          console.error(error);
-          this.message = 'Hubo un error al verificar el correo.';
-        } else if (data?.session) {
-          // Guardar sesión manualmente
-          await this.supabaseService.setSession(data.session);
-          console.log('Sesión establecida:', data.session);
-
-          this.message = 'Correo verificado correctamente. Iniciando sesión...';
-
-          // Redirigir después de un pequeño retraso para asegurar que el guard detecte la sesión
-          setTimeout(() => {
-            this.router.navigate(['/home']);
-          }, 500);
-        } else {
-          this.message = 'Correo verificado, pero no se inició sesión automáticamente.';
-        }
-      } catch (err) {
-        console.error(err);
-        this.message = 'Ocurrió un error inesperado.';
-      }
-    } else {
+    if (!token || !email) {
       this.message = 'Faltan datos de verificación en la URL.';
+      this.error = true;
+      this.loading = false;
+      return;
+    }
+
+    try {
+      const { error } = await this.supabaseService.verifyEmail(email, token);
+
+      if (error) {
+        this.message = 'Hubo un error al verificar tu correo.';
+        this.error = true;
+      } else {
+        this.message = '✅ Tu correo fue verificado correctamente.';
+        this.success = true;
+      }
+    } catch (err) {
+      this.message = 'Ocurrió un error inesperado.';
+      this.error = true;
+      this.logError(err);
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  private logError(error: unknown): void {
+    if (!environment.production) {
+      console.error(error);
     }
   }
 }
