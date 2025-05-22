@@ -1,5 +1,5 @@
 .paginaRegistro {
-   background-image: url("../../../assets/cinefondo.png");
+   background-image: url("../../../../assets/cinefondo.png");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
@@ -21,7 +21,7 @@
     align-items: center;
     background-color: #714b1ad1;
     border-radius: 20px;
-    background-image: url("../../../assets/ticket1.png");
+    background-image: url("../../../../assets/ticket1.png");
     background-size: cover;
     background-size: 90%;
     background-repeat: no-repeat;
