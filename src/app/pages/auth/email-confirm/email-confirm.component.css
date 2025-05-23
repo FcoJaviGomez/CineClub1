@@ -1,49 +1,64 @@
-.verificacion-container {
+.confirm-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 70vh;
-  background-color: #f9f9f9;
+  min-height: 100vh;
+  background: var(--amarillo);
+  padding: 1rem;
 }
 
-.verificacion-card {
-  padding: 2rem;
-  background-color: #fff;
+.confirm-card {
+  background: var(--fondo);
+  padding: 2.5rem 3rem;
   border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
   text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
   max-width: 400px;
   width: 100%;
 }
 
-.estado {
-  font-size: 1.1rem;
-  margin-bottom: 1.5rem;
+.spinner {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 1.5rem;
+  border: 5px solid rgba(0, 0, 0, 0.1);
+  border-top: 5px solid #007acc;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
 }
 
-.estado.success {
-  color: green;
+.icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
 }
 
-.estado.error {
-  color: red;
+.icon.success {
+  color: #28a745;
 }
 
-.estado.info {
-  color: #555;
+.icon.error {
+  color: #dc3545;
 }
 
 .btn {
-  display: inline-block;
-  padding: 0.6rem 1.2rem;
-  background-color: #007bff;
+  margin-top: 1.5rem;
+  padding: 0.6rem 1.4rem;
+  background-color: #007acc;
   color: white;
-  border-radius: 8px;
+  border: none;
+  border-radius: 5px;
   text-decoration: none;
-  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 .btn:hover {
-  background-color: #0056b3;
+  background-color: #005fa3;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }

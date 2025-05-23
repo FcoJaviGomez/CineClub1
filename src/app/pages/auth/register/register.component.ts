@@ -20,16 +20,19 @@ export class RegisterComponent {
     fecha_nacimiento: ''
   };
 
+  mensajeRegistro: string = '';
+  errorRegistro: string = '';
+
   constructor(
     private supabaseService: SupabaseService,
     private router: Router
-  ) { }
+  ) {}
 
   async registrarse() {
     const { nombre, apellidos, email, password, fecha_nacimiento } = this.nuevoUsuario;
 
     try {
-      // Registro en auth
+      // Registro en Supabase Auth con metadatos
       const { data, error } = await this.supabaseService.register(email, password, {
         nombre,
         apellidos,
@@ -38,36 +41,25 @@ export class RegisterComponent {
 
       if (error) {
         console.error('Error al registrarse en auth:', error.message);
+        this.errorRegistro = 'Ocurrió un error al registrarse: ' + error.message;
         return;
       }
 
-      console.log('Usuario creado en auth:', data);
+      // Mostrar mensaje de éxito
+      this.mensajeRegistro = 'Te has registrado correctamente. Revisa tu correo para confirmar tu cuenta.';
+      this.errorRegistro = '';
 
-      // Insertamos en la tabla 'usuarios'
-      const { error: insertError } = await this.supabaseService.insertUsuario({
-        email: email,
-        nombre: nombre,
-        apellidos: apellidos,
-        fecha_nacimiento: fecha_nacimiento,
-        password_hash: '', // Opcionalmente podrías guardar hash aquí si quieres
-        last_login: null,
-        created_at: new Date().toISOString()
-      });
-
-      if (insertError) {
-        console.error('Error insertando en tabla usuarios:', insertError.message);
-        return;
-      }
-
-      console.log('Usuario insertado en tabla usuarios.');
-
-      // Redirigir al login
-      this.router.navigate(['/login']);
+      // redirigir después de unos segundos
+      setTimeout(() => {
+        this.router.navigate(['/login']);
+      }, 6000);
 
     } catch (error) {
       console.error('Error inesperado en el registro:', error);
+      this.errorRegistro = 'Ocurrió un error inesperado. Intenta de nuevo.';
     }
   }
+
   irALogin() {
     this.router.navigate(['/login']);
   }

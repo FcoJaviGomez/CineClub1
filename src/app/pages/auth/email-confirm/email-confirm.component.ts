@@ -1,66 +1,72 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { SupabaseService } from '../../../services/supabase.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { environment } from '../../../../environments/environment';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-email-confirm',
-  standalone: true,
-  imports: [CommonModule],
   templateUrl: './email-confirm.component.html',
-  styleUrls: ['./email-confirm.component.css']
+  styleUrls: ['./email-confirm.component.css'],
+  imports: [CommonModule]
 })
 export class EmailConfirmComponent implements OnInit {
-  message = 'Verificando correo...';
-  loading = false;
-  success = false;
-  error = false;
+  private supabase: SupabaseClient;
+  statusMessage: string = 'Verificando tu correo...';
+  isSuccess: boolean = false;
+  isError: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
-    private supabaseService: SupabaseService
-  ) {}
+    private router: Router
+  ) {
+    this.supabase = createClient(environment.supabaseUrl, environment.supabaseAnonKey);
+  }
 
   ngOnInit(): void {
-    this.confirmEmail();
-  }
+    this.route.queryParams.subscribe(async params => {
+      const token = params['token'];
 
-  private async confirmEmail(): Promise<void> {
-    this.loading = true;
+      if (!token) {
+        this.statusMessage = '❌ Acceso inválido. Token de verificación no encontrado.';
+        this.isError = true;
 
-    const token = this.route.snapshot.queryParamMap.get('confirmation_token');
-    const email = this.route.snapshot.queryParamMap.get('email');
+        // Redirección automática después de 3 segundos
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 3000);
 
-    if (!token || !email) {
-      this.message = 'Faltan datos de verificación en la URL.';
-      this.error = true;
-      this.loading = false;
-      return;
-    }
-
-    try {
-      const { error } = await this.supabaseService.verifyEmail(email, token);
-
-      if (error) {
-        this.message = 'Hubo un error al verificar tu correo.';
-        this.error = true;
-      } else {
-        this.message = '✅ Tu correo fue verificado correctamente.';
-        this.success = true;
+        return;
       }
+
+      await this.verificarToken(token);
+    });
+  }
+
+  async verificarToken(token: string): Promise<void> {
+    try {
+      const { data, error } = await this.supabase.auth.setSession({
+        access_token: token,
+        refresh_token: ''
+      });
+
+      if (error || !data?.session) {
+        this.statusMessage = '❌ No se pudo establecer la sesión.';
+        this.isError = true;
+        return;
+      }
+
+      this.statusMessage = '✅ ¡Correo verificado correctamente!';
+      this.isSuccess = true;
+
     } catch (err) {
-      this.message = 'Ocurrió un error inesperado.';
-      this.error = true;
-      this.logError(err);
-    } finally {
-      this.loading = false;
+      console.error(err);
+      this.statusMessage = '❌ Ocurrió un error inesperado.';
+      this.isError = true;
     }
   }
 
-  private logError(error: unknown): void {
-    if (!environment.production) {
-      console.error(error);
-    }
+  goToLogin(): void {
+    this.router.navigate(['/login']);
   }
 }

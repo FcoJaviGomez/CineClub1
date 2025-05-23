@@ -55,6 +55,15 @@
             </div>
             <button class="boton">REGISTRARSE</button>
         </form>
+        <!-- Mensaje de éxito -->
+        <div *ngIf="mensajeRegistro" class="mensaje-exito">
+        {{ mensajeRegistro }}
+        </div>
+
+        <!-- Mensaje de error -->
+        <div *ngIf="errorRegistro" class="mensaje-error">
+        {{ errorRegistro }}
+        </div>
     </div>
 
 </div>

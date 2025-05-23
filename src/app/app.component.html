@@ -1,9 +1,9 @@
-<div *ngIf="mostrarLayout$ | async">
+<ng-container *ngIf="mostrarLayout$ | async">
   <app-header></app-header>
-</div>
+</ng-container>
 
 <router-outlet></router-outlet>
 
-<div *ngIf="mostrarLayout$ | async">
+<ng-container *ngIf="mostrarLayout$ | async">
   <app-footer></app-footer>
-</div>
+</ng-container>

@@ -30,5 +30,10 @@ export const routes: Routes = [
     path: 'email-confirm',
     loadComponent: () =>
       import('./pages/auth/email-confirm/email-confirm.component').then(m => m.EmailConfirmComponent)
-  }
+  },
+  {
+  path: 'verify-bridge',
+  loadComponent: () =>
+    import('./pages/auth/verify-bridge/verify-bridge.component').then(m => m.VerifyBridgeComponent)
+}
 ];

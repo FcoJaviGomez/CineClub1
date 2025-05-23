@@ -29,19 +29,17 @@ export class AppComponent implements OnInit {
   constructor(public router: Router) {}
 
   ngOnInit() {
-    // Verificar la URL cuando se inicializa
     this.actualizarLayout(this.router.url);
 
-    // Y también al cambiar de ruta
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe((event: any) => {
-      this.actualizarLayout(event.urlAfterRedirects);
-    });
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        this.actualizarLayout(event.urlAfterRedirects);
+      });
   }
 
   private actualizarLayout(url: string) {
-    const ocultar =  url === '/login' || url === '/registro';
+    const ocultar = ['/login', '/registro', '/email-confirm', '/verify-bridge'].includes(url);
     this.mostrarLayout$.next(!ocultar);
   }
 }
