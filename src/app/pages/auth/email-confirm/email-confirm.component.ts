@@ -24,26 +24,39 @@ export class EmailConfirmComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Esperar 500ms para dar tiempo a que Supabase restaure la sesión
-    setTimeout(() => {
-      this.supabase.auth.getSession().then(({ data, error }) => {
-        if (error || !data.session) {
-          this.statusMessage = '❌ La sesión no pudo ser verificada.';
-          this.isError = true;
+    this.route.queryParams.subscribe(async (params) => {
+      const token = params['token'];
+      const email = params['email'];
 
-          setTimeout(() => {
-            this.router.navigate(['/login']);
-          }, 3000);
+      if (!token || !email) {
+        this.statusMessage = '❌ Token de verificación o correo electrónico no encontrado.';
+        this.isError = true;
+        setTimeout(() => this.router.navigate(['/login']), 3000);
+        return;
+      }
+
+      try {
+        const { data, error } = await this.supabase.auth.verifyOtp({
+          type: 'signup',
+          token,
+          email
+        });
+
+        if (error) {
+          this.statusMessage = '❌ Error al verificar el correo: ' + error.message;
+          this.isError = true;
         } else {
           this.statusMessage = '✅ ¡Correo verificado correctamente!';
           this.isSuccess = true;
-
-          setTimeout(() => {
-            this.router.navigate(['/login']);
-          }, 6000);
         }
-      });
-    }, 500);
+      } catch (err) {
+        console.error(err);
+        this.statusMessage = '❌ Ocurrió un error inesperado.';
+        this.isError = true;
+      }
+
+      setTimeout(() => this.router.navigate(['/login']), 5000);
+    });
   }
 
   goToLogin(): void {
