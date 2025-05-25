@@ -24,23 +24,26 @@ export class EmailConfirmComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.supabase.auth.getSession().then(({ data, error }) => {
-      if (error || !data.session) {
-        this.statusMessage = '❌ La sesión no pudo ser verificada.';
-        this.isError = true;
+    // Esperar 500ms para dar tiempo a que Supabase restaure la sesión
+    setTimeout(() => {
+      this.supabase.auth.getSession().then(({ data, error }) => {
+        if (error || !data.session) {
+          this.statusMessage = '❌ La sesión no pudo ser verificada.';
+          this.isError = true;
 
-        setTimeout(() => {
-          this.router.navigate(['/login']);
-        }, 3000);
-      } else {
-        this.statusMessage = '✅ ¡Correo verificado correctamente!';
-        this.isSuccess = true;
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 3000);
+        } else {
+          this.statusMessage = '✅ ¡Correo verificado correctamente!';
+          this.isSuccess = true;
 
-        setTimeout(() => {
-          this.router.navigate(['/login']);
-        }, 6000);
-      }
-    });
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 6000);
+        }
+      });
+    }, 500);
   }
 
   goToLogin(): void {
