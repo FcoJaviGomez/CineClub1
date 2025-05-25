@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-verify-bridge',
@@ -13,19 +14,19 @@ export class VerifyBridgeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.pipe(first()).subscribe(params => {
       const token = params['token'];
 
       if (token) {
-        // Guarda el token localmente o en un servicio, si es necesario
+        // Opcional: guardar el token
         localStorage.setItem('confirmationToken', token);
 
-        // Redirecciona a la ruta de confirmación
+        // Redireccionar a email-confirm
         this.router.navigate(['/email-confirm'], {
           queryParams: { token: token }
         });
       } else {
-        // Si no hay token, redirige a una página de error o al home
+        // Redirigir a inicio en caso de error
         this.router.navigate(['/']);
       }
     });

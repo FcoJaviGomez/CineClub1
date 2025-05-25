@@ -18,7 +18,8 @@ export class SupabaseService {
       email,
       password,
       options: {
-        data: userMetadata
+        data: userMetadata,
+        emailRedirectTo: 'https://cineclubb.netlify.app/verify-bridge'
       }
     });
   }

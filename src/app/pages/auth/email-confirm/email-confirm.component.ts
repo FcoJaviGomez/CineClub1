@@ -24,46 +24,23 @@ export class EmailConfirmComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(async params => {
-      const token = params['token'];
-
-      if (!token) {
-        this.statusMessage = '❌ Acceso inválido. Token de verificación no encontrado.';
+    this.supabase.auth.getSession().then(({ data, error }) => {
+      if (error || !data.session) {
+        this.statusMessage = '❌ La sesión no pudo ser verificada.';
         this.isError = true;
 
-        // Redirección automática después de 3 segundos
         setTimeout(() => {
           this.router.navigate(['/login']);
         }, 3000);
+      } else {
+        this.statusMessage = '✅ ¡Correo verificado correctamente!';
+        this.isSuccess = true;
 
-        return;
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 6000);
       }
-
-      await this.verificarToken(token);
     });
-  }
-
-  async verificarToken(token: string): Promise<void> {
-    try {
-      const { data, error } = await this.supabase.auth.setSession({
-        access_token: token,
-        refresh_token: ''
-      });
-
-      if (error || !data?.session) {
-        this.statusMessage = '❌ No se pudo establecer la sesión.';
-        this.isError = true;
-        return;
-      }
-
-      this.statusMessage = '✅ ¡Correo verificado correctamente!';
-      this.isSuccess = true;
-
-    } catch (err) {
-      console.error(err);
-      this.statusMessage = '❌ Ocurrió un error inesperado.';
-      this.isError = true;
-    }
   }
 
   goToLogin(): void {
