@@ -27,9 +27,10 @@ export class EmailConfirmComponent implements OnInit {
     this.route.queryParams.subscribe(async (params) => {
       const token = params['token'];
       const email = params['email'];
+      const type = params['type'];
 
-      if (!token || !email) {
-        this.statusMessage = '❌ Token o correo faltante.';
+      if (!token || !email || type !== 'signup') {
+        this.statusMessage = '❌ Token o tipo de verificación inválido.';
         this.isError = true;
         return;
       }

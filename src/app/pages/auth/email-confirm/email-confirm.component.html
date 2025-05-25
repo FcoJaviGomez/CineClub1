@@ -18,6 +18,7 @@
 
     <!-- Estado: Error -->
     <ng-container *ngIf="isError">
+      <div class="icon error">❌</div>
       <h2>Error al verificar</h2>
       <p>{{ statusMessage }}</p>
       <button class="btn" (click)="goToLogin()">Ir al login</button>
