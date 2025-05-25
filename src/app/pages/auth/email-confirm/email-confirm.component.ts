@@ -29,9 +29,8 @@ export class EmailConfirmComponent implements OnInit {
       const email = params['email'];
 
       if (!token || !email) {
-        this.statusMessage = '❌ Token de verificación o correo electrónico no encontrado.';
+        this.statusMessage = '❌ Token o correo faltante.';
         this.isError = true;
-        setTimeout(() => this.router.navigate(['/login']), 3000);
         return;
       }
 
@@ -54,8 +53,6 @@ export class EmailConfirmComponent implements OnInit {
         this.statusMessage = '❌ Ocurrió un error inesperado.';
         this.isError = true;
       }
-
-      setTimeout(() => this.router.navigate(['/login']), 5000);
     });
   }
 

@@ -16,17 +16,18 @@ export class VerifyBridgeComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParams.pipe(first()).subscribe(params => {
       const token = params['token'];
+      const email = params['email'];
 
-      if (token) {
+      if (token && email) {
         // Opcional: guardar el token
         localStorage.setItem('confirmationToken', token);
 
-        // Redireccionar a email-confirm
+        // Redirigir a email-confirm con ambos parámetros
         this.router.navigate(['/email-confirm'], {
-          queryParams: { token: token }
+          queryParams: { token, email }
         });
       } else {
-        // Redirigir a inicio en caso de error
+        // Redirigir si falta algo
         this.router.navigate(['/']);
       }
     });
