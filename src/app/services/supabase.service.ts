@@ -14,6 +14,9 @@ export class SupabaseService {
   }
 
   async register(email: string, password: string, userMetadata: any = {}) {
+
+    console.log('🧪 Registrando con redirect a: https://cineclubb.netlify.app/verify-bridge');
+
     return await this.supabase.auth.signUp({
       email,
       password,
