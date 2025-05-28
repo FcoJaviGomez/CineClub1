@@ -51,6 +51,7 @@ export class RegisterComponent {
 
   // 2. Guardar en la tabla usuarios
   const { error: insertError } = await this.supabaseService.insertUsuario({
+    user_id: user.id,
     email: email.toLowerCase(),
     nombre,
     apellidos,
