@@ -66,9 +66,9 @@ export class RegisterComponent {
     }
 
     // 3. Redirigir al Home
-          setTimeout(() => {
-        this.router.navigate(['/login']);
-      }, 5000);
+    setTimeout(() => {
+      this.router.navigate(['/login']);
+    }, 5000);
   }
 
   irALogin() {
