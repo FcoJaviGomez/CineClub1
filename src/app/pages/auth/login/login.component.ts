@@ -31,20 +31,18 @@ async iniciarSesion() {
     const { data, error } = await this.supabaseService.login(email, password);
 
     if (error) {
-      console.error('Error al iniciar sesión:', error.message);
-      this.validacion = [error.message, false];
+      const isNotConfirmed = error.message.toLowerCase().includes('email not confirmed');
+
+      this.validacion = [
+        isNotConfirmed
+          ? 'Debes confirmar tu correo antes de iniciar sesión.'
+          : 'Error al iniciar sesión: ' + error.message,
+        false
+      ];
+
       return;
     }
 
-    const user = data?.user;
-
-    // ⚠️ Verifica si el correo fue confirmado
-    if (!user?.email_confirmed_at) {
-      this.validacion = ['Debes confirmar tu correo antes de iniciar sesión.', false];
-      return;
-    }
-
-    // ✅ Si todo está bien, continúa al home
     this.router.navigate(['/home']);
 
   } catch (error) {
@@ -52,7 +50,6 @@ async iniciarSesion() {
     this.validacion = ['Error inesperado al iniciar sesión', false];
   }
 }
-
 
   irARegistro() {
     this.router.navigate(['/registro']);
