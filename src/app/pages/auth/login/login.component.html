@@ -3,7 +3,6 @@
     <form class="div_form" #inicioForm="ngForm" (ngSubmit)="iniciarSesion()">
       <div class="texto">CineCLUB</div>
 
-      <!-- EMAIL -->
       <div>
         <input class="input" type="text" name="email" [(ngModel)]="usuario.email" #email="ngModel" placeholder="Correo"
           [ngClass]="{ 'is-invalid': inicioForm.submitted && email.invalid }" required email />
@@ -15,7 +14,6 @@
         </div>
       </div>
 
-      <!-- PASSWORD -->
       <div>
         <input class="input" type="password" name="password" [(ngModel)]="usuario.password" #password="ngModel"
           placeholder="Contraseña" [ngClass]="{ 'is-invalid': inicioForm.submitted && password.invalid }" minlength="8"
@@ -26,17 +24,10 @@
         <div *ngIf="password.errors?.['minlength']">
           <p class="text-danger">La contraseña debe tener 8 caracteres</p>
         </div>
-        <div *ngIf="validacion[1] === false">
-          <p class="text-danger">{{ validacion[0] }}</p>
-        </div>
-
       </div>
 
-      <!-- BOTÓN -->
       <button class="boton" type="submit">INICIAR SESIÓN</button>
 
-      <!-- REGISTRO -->
-      <!-- REGISTRO -->
       <div class="div_registro">
         <a class="div_noTienesCuenta">¿No tienes una cuenta?</a>
         <a class="div_registrate" (click)="irARegistro()">Regístrate</a>
