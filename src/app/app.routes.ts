@@ -27,13 +27,20 @@ export const routes: Routes = [
       import('./pages/(tabs)/detalle-pelicula/detalle-pelicula.component').then(m => m.DetallePeliculaComponent)
   },
   {
+    path: 'perfil',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/(tabs)/perfil/perfil.component').then(m => m.PerfilComponent)
+  },
+  {
     path: 'email-confirm',
     loadComponent: () =>
       import('./pages/auth/email-confirm/email-confirm.component').then(m => m.EmailConfirmComponent)
   },
   {
-  path: 'verify-bridge',
-  loadComponent: () =>
-    import('./pages/auth/verify-bridge/verify-bridge.component').then(m => m.VerifyBridgeComponent)
-}
+    path: 'admin/usuarios',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/(tabs)/admin/usuarios.component').then(m => m.UsuariosComponent)
+  }
 ];
