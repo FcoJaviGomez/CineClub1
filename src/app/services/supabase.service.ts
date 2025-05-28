@@ -12,31 +12,51 @@ export class SupabaseService {
     this.supabase = createClient(environment.supabaseUrl, environment.supabaseAnonKey);
   }
 
-  // ✅ Getter para acceder al cliente de Supabase
   get client(): SupabaseClient {
     return this.supabase;
   }
 
   async register(email: string, password: string, userMetadata: any = {}) {
-    return await this.supabase.auth.signUp({
+    // 1. Crear el usuario en Supabase Auth
+    const { data, error } = await this.supabase.auth.signUp({
       email,
       password,
       options: {
-        data: userMetadata,
+        data: userMetadata, // opcional: guardar metadata en auth
         emailRedirectTo: 'https://cineclubb.netlify.app/email-confirm'
       }
     });
-  }
 
-  async esAdmin(): Promise<boolean> {
-    const { data, error } = await this.supabase.rpc('is_admin');
-    return !!data && !error;
+    if (error) return { error };
+
+    const user = data?.user;
+
+    // 2. Insertar en la tabla usuarios
+    if (user) {
+      const { error: insertError } = await this.supabase.from('usuarios').insert([
+        {
+          id: user.id, 
+          email: email.toLowerCase(),
+          ...userMetadata, 
+          created_at: new Date().toISOString(),
+          rol: 'user' 
+        }
+      ]);
+
+      if (insertError) return { error: insertError };
+    }
+
+    return { data };
   }
 
   async insertUsuario(usuario: any) {
     return await this.supabase.from('usuarios').insert([usuario]);
   }
 
+  async esAdmin(): Promise<boolean> {
+    const { data, error } = await this.supabase.rpc('is_admin');
+    return !!data && !error;
+  }
 
   async login(email: string, password: string) {
     return await this.supabase.auth.signInWithPassword({ email, password });
