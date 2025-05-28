@@ -88,9 +88,14 @@
     color: var(--blanco)
 }
 
-.mensaje-error{
-    color: red;
-    margin-left: 20px;
+.mensaje-error {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  border-radius: 8px;
+  font-weight: 500;
 }
 
 

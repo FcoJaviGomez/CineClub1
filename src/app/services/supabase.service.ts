@@ -16,37 +16,65 @@ export class SupabaseService {
     return this.supabase;
   }
 
+  /**
+   * Registro básico (solo crea el usuario en Auth)
+   * No inserta en tabla 'usuarios' hasta que inicie sesión
+   */
   async register(email: string, password: string, userMetadata: any = {}) {
-    // 1. Crear el usuario en Supabase Auth
-    const { data, error } = await this.supabase.auth.signUp({
+    return await this.supabase.auth.signUp({
       email,
       password,
       options: {
-        data: userMetadata, // opcional: guardar metadata en auth
+        data: userMetadata,
         emailRedirectTo: 'https://cineclubb.netlify.app/email-confirm'
       }
     });
+  }
 
-    if (error) return { error };
+  /**
+   * Login del usuario. Si no existe en la tabla 'usuarios', se inserta.
+   */
+  async login(email: string, password: string) {
+    const { data, error } = await this.supabase.auth.signInWithPassword({ email, password });
 
-    const user = data?.user;
+    if (error) throw error;
 
-    // 2. Insertar en la tabla usuarios
+    const user = data.user;
+
     if (user) {
-      const { error: insertError } = await this.supabase.from('usuarios').insert([
-        {
-          id: user.id, 
-          email: email.toLowerCase(),
-          ...userMetadata, 
-          created_at: new Date().toISOString(),
-          rol: 'user' 
-        }
-      ]);
+      // Verificar si ya tiene fila en la tabla usuarios
+      const { data: existingUser, error: fetchError } = await this.supabase
+        .from('usuarios')
+        .select('id')
+        .eq('id', user.id)
+        .single();
 
-      if (insertError) return { error: insertError };
+      if (fetchError && fetchError.code !== 'PGRST116') {
+        // Otro error inesperado
+        throw fetchError;
+      }
+
+      if (!existingUser) {
+        // Obtener metadata desde el perfil si se necesita
+        const userMetadata = user.user_metadata || {};
+
+        const { error: insertError } = await this.supabase.from('usuarios').insert([
+          {
+            id: user.id,
+            email: (user.email ?? '').toLowerCase(),
+            nombre: userMetadata["nombre"] || '',
+            apellidos: userMetadata["apellidos"] || '',
+            fecha_nacimiento: userMetadata["fecha_nacimiento"] || null,
+            created_at: new Date().toISOString(),
+            rol: 'user'
+          }
+        ]);
+
+        if (insertError) throw insertError;
+      }
     }
 
-    return { data };
+    return data;
   }
 
   async insertUsuario(usuario: any) {
@@ -56,10 +84,6 @@ export class SupabaseService {
   async esAdmin(): Promise<boolean> {
     const { data, error } = await this.supabase.rpc('is_admin');
     return !!data && !error;
-  }
-
-  async login(email: string, password: string) {
-    return await this.supabase.auth.signInWithPassword({ email, password });
   }
 
   async updateLastLogin(email: string) {
