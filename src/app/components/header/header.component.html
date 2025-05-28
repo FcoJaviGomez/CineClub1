@@ -3,5 +3,13 @@
         <div class="icono"><i class="fa-solid fa-ticket"></i></div>
         <div class="titulo">CineCLUB</div>
     </a>
-    <button class="boton" on-click="cerrarSesion()">Cerrar Sesión</button>
+
+    <div class="acciones-header">
+        <button *ngIf="esAdmin" class="admin-boton" (click)="gestionarUsuarios()">
+            <i class="fa-solid fa-users-gear"></i> Gestionar usuarios
+        </button>
+        <button class="perfil-boton" (click)="verPerfil()">
+            <i class="fa-solid fa-user"></i> Mi Perfil
+        </button>
+    </div>
 </header>

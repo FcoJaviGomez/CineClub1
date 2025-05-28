@@ -29,35 +29,46 @@ export class RegisterComponent {
   ) {}
 
   async registrarse() {
+    this.errorRegistro = '';
+    this.mensajeRegistro = '';
+
     const { nombre, apellidos, email, password, fecha_nacimiento } = this.nuevoUsuario;
 
-    try {
-      // Registro en Supabase Auth con metadatos
-      const { data, error } = await this.supabaseService.register(email, password, {
-        nombre,
-        apellidos,
-        fecha_nacimiento
-      });
+    // 1. Registro en Supabase Auth
+    const { data, error } = await this.supabaseService.register(email, password);
 
-      if (error) {
-        console.error('Error al registrarse en auth:', error.message);
-        this.errorRegistro = 'Ocurrió un error al registrarse: ' + error.message;
-        return;
-      }
-
-      // Mostrar mensaje de éxito
-      this.mensajeRegistro = 'Te has registrado correctamente. Revisa tu correo para confirmar tu cuenta.';
-      this.errorRegistro = '';
-
-      // redirigir después de unos segundos
-      setTimeout(() => {
-        this.router.navigate(['/login']);
-      }, 6000);
-
-    } catch (error) {
-      console.error('Error inesperado en el registro:', error);
-      this.errorRegistro = 'Ocurrió un error inesperado. Intenta de nuevo.';
+    if (error) {
+      this.errorRegistro = 'Error al crear la cuenta: ' + error.message;
+      return;
     }
+
+    const user = data?.user;
+
+    if (!user) {
+      this.errorRegistro = 'No se pudo crear el usuario en Auth.';
+      return;
+    }
+
+    // 2. Guardar en la tabla usuarios
+    const { error: insertError } = await this.supabaseService.insertUsuario({
+      email: email.toLowerCase(),
+      nombre,
+      apellidos,
+      fecha_nacimiento,
+      created_at: new Date().toISOString(),
+      rol: 'user'
+    });
+
+    if (insertError) {
+      this.errorRegistro = 'Error al guardar los datos del usuario.';
+      console.error(insertError);
+      return;
+    }
+
+    // 3. Redirigir al Home
+          setTimeout(() => {
+        this.router.navigate(['/login']);
+      }, 5000);
   }
 
   irALogin() {

@@ -1,0 +1,82 @@
+.usuarios-admin-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: var(--amarillo);
+    color: var(--negro);
+    border-radius: 10px;
+    box-shadow: 0 2px 5px var(--negro);
+}
+
+.usuarios-admin-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--marron);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th,
+td {
+    padding: 12px;
+    border: 1px solid var(--negro);
+    text-align: left;
+}
+
+th {
+    background-color: var(--marron);
+    color: var(--blanco);
+}
+
+td button {
+    margin-right: 8px;
+    padding: 6px 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    background-color: var(--amarillo);
+    box-shadow: 0 1px 2px var(--negro);
+}
+
+td button:hover {
+    background-color: var(--marron);
+    color: var(--blanco);
+}
+
+
+@media (max-width: 600px) {
+
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+
+    th {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    td {
+        position: relative;
+        padding-left: 50%;
+        text-align: right;
+    }
+
+    td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        font-weight: bold;
+        text-align: left;
+    }
+}

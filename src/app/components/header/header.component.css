@@ -21,7 +21,7 @@
     cursor: -webkit-grab;
 }
 
-.header_div:hover{
+.header_div:hover {
     color: var(--blanco);
 }
 
@@ -35,17 +35,95 @@
     font-weight: 700;
 }
 
-.boton {
-    width: 180px;
-    height: 30px;
+.perfil-menu {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background-color: var(--amarillo);
     border-radius: 10px;
+    box-shadow: 0px 1px 3px 1px var(--negro);
+    cursor: pointer;
     font-size: 18px;
+    user-select: none;
+    color: var(--negro);
+}
+
+.perfil-menu:hover {
+    background-color: var(--marron);
+    color: var(--blanco);
+}
+
+.perfil-menu i {
+    font-size: 20px;
+}
+
+.perfil-boton {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    background-color: var(--amarillo);
+    box-shadow: 0px 1px 3px 1px var(--negro);
+    cursor: pointer;
+    color: var(--negro);
+}
+
+.perfil-boton:hover {
+    background-color: var(--marron);
+    color: var(--blanco);
+}
+
+.menu-opciones {
+    position: absolute;
+    top: 110%;
+    right: 0;
+    background-color: var(--amarillo);
+    border: 1px solid var(--marron);
+    border-radius: 8px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    width: 150px;
+}
+
+.menu-opciones li {
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.menu-opciones li:hover {
+    background-color: var(--marron);
+    color: var(--blanco);
+}
+
+.acciones-header {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.admin-boton {
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 16px;
     border: none;
     background-color: var(--amarillo);
     box-shadow: 0px 1px 3px 1px var(--negro);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.boton:hover {
-    color: var(--blanco);
+.admin-boton:hover {
     background-color: var(--marron);
+    color: var(--blanco);
 }

@@ -1,0 +1,92 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Esto fuerza que el contenido ocupe el espacio restante */
+.contenido-principal {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+/* El bloque del perfil como estaba */
+.perfil-container {
+    background-color: var(--amarillo);
+    border-radius: 15px;
+    box-shadow: 0px 2px 5px var(--negro);
+    color: var(--negro);
+    max-width: 500px;
+    width: 100%;
+    padding: 30px 20px;
+}
+
+.perfil-container h2 {
+    font-size: 26px;
+    font-weight: bold;
+    color: var(--marron);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.perfil-info p {
+    font-size: 16px;
+    margin: 10px 0;
+    line-height: 1.4;
+}
+
+.perfil-info strong {
+    color: var(--marron);
+}
+
+.cerrar-sesion-boton {
+    margin-top: 25px;
+    padding: 10px 14px;
+    font-size: 15px;
+    background-color: var(--amarillo);
+    color: var(--negro);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0px 1px 3px 1px var(--negro);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+    width: 100%;
+}
+
+.cerrar-sesion-boton:hover {
+    background-color: var(--marron);
+    color: var(--blanco);
+}
+
+p {
+    text-align: center;
+    font-size: 16px;
+    color: var(--marron);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .perfil-container {
+        padding: 20px 16px;
+        margin: 20px 16px;
+    }
+
+    .perfil-container h2 {
+        font-size: 22px;
+    }
+
+    .perfil-info p {
+        font-size: 15px;
+    }
+
+    .cerrar-sesion-boton {
+        font-size: 14px;
+        padding: 10px;
+    }
+}

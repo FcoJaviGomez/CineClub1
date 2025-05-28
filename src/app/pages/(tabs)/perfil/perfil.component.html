@@ -1,0 +1,25 @@
+<div class="contenido-principal">
+    <div class="perfil-container" *ngIf="usuario">
+        <h2>Mi Perfil</h2>
+
+        <div class="perfil-info">
+            <p><strong>Nombre:</strong> {{ usuario.nombre }}</p>
+            <p><strong>Apellidos:</strong> {{ usuario.apellidos }}</p>
+            <p><strong>Email:</strong> {{ usuario.email }}</p>
+            <p><strong>Fecha de nacimiento:</strong> {{ usuario.fecha_nacimiento }}</p>
+            <p><strong>Creado el:</strong> {{ usuario.created_at | date:'short' }}</p>
+        </div>
+
+        <button class="cerrar-sesion-boton" (click)="cerrarSesion()">
+            <i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión
+        </button>
+    </div>
+
+    <div *ngIf="!usuario && !cargando">
+        <p>No se encontró el perfil del usuario.</p>
+    </div>
+
+    <div *ngIf="cargando">
+        <p>Cargando perfil...</p>
+    </div>
+</div>

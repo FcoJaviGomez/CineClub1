@@ -1,28 +1,8 @@
 <div class="confirm-container">
-  <div class="confirm-card">
-    
-    <!-- Estado: Verificando -->
-    <ng-container *ngIf="!isSuccess && !isError">
-      <div class="spinner"></div>
-      <h2>Verificando tu correo...</h2>
-      <p>Por favor, espera unos segundos.</p>
-    </ng-container>
+  <p>{{ statusMessage }}</p>
 
-    <!-- Estado: Éxito -->
-    <ng-container *ngIf="isSuccess">
-      <div class="icon success">✅</div>
-      <h2>¡Correo verificado correctamente!</h2>
-      <p>{{ statusMessage }}</p>
-      <button class="btn" (click)="goToLogin()">Ir al login</button>
-    </ng-container>
-
-    <!-- Estado: Error -->
-    <ng-container *ngIf="isError">
-      <div class="icon error">❌</div>
-      <h2>Error al verificar</h2>
-      <p>{{ statusMessage }}</p>
-      <button class="btn" (click)="goToLogin()">Ir al login</button>
-    </ng-container>
-
-  </div>
+  <button *ngIf="isSuccess || isError" (click)="goToLogin()">
+    Ir al login
+  </button>
 </div>
+
