@@ -122,6 +122,13 @@ export class SupabaseService {
   }
 
   /**
+   * Actualiza los metadatos del usuario
+   */
+  async updatePassword(newPassword: string) {
+    return await this.supabase.auth.updateUser({ password: newPassword });
+  }
+
+  /**
    * Obtiene el usuario actual
    */
   getUser() {
