@@ -24,25 +24,35 @@ export class LoginComponent {
     private supabaseService: SupabaseService
   ) { }
 
-  async iniciarSesion() {
-    const { email, password } = this.usuario;
+async iniciarSesion() {
+  const { email, password } = this.usuario;
 
-    try {
-      const { data, error } = await this.supabaseService.login(email, password);
+  try {
+    const { data, error } = await this.supabaseService.login(email, password);
 
-      if (error) {
-        console.error('Error al iniciar sesión:', error.message);
-        this.validacion = [error.message, false];
-        return;
-      }
-
-      this.router.navigate(['/home']);
-
-    } catch (error) {
-      console.error('Error inesperado al iniciar sesión:', error);
-      this.validacion = ['Error inesperado al iniciar sesión', false];
+    if (error) {
+      console.error('Error al iniciar sesión:', error.message);
+      this.validacion = [error.message, false];
+      return;
     }
+
+    const user = data?.user;
+
+    // ⚠️ Verifica si el correo fue confirmado
+    if (!user?.email_confirmed_at) {
+      this.validacion = ['Debes confirmar tu correo antes de iniciar sesión.', false];
+      return;
+    }
+
+    // ✅ Si todo está bien, continúa al home
+    this.router.navigate(['/home']);
+
+  } catch (error) {
+    console.error('Error inesperado al iniciar sesión:', error);
+    this.validacion = ['Error inesperado al iniciar sesión', false];
   }
+}
+
 
   irARegistro() {
     this.router.navigate(['/registro']);
