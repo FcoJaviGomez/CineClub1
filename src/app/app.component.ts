@@ -39,7 +39,7 @@ export class AppComponent implements OnInit {
   }
 
   private actualizarLayout(url: string) {
-    const ocultar = ['/login', '/registro', '/email-confirm', '/verify-bridge'].includes(url);
+    const ocultar = ['/login', '/registro', '/email-confirm', '/reset-password', '/forgot-password'].includes(url);
     this.mostrarLayout$.next(!ocultar);
   }
 }

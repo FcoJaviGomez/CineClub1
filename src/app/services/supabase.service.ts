@@ -112,6 +112,15 @@ export class SupabaseService {
     return await this.supabase.auth.signOut();
   }
 
+    /**
+   * Envia un correo para recuperar contraseña
+   */
+  async resetPassword(email: string) {
+    return await this.supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: 'https://cineclubb.netlify.app/reset-password'
+    });
+  }
+
   /**
    * Obtiene el usuario actual
    */

@@ -1,11 +1,6 @@
 <!-- Cuerpo principal: se muestra si ya se cargaron los datos -->
 <body class="body" *ngIf="!cargando && peliculasActuales.length && peliculasPopulares.length">
 
-  <!-- Botón para recargar películas -->
-  <a class="btn btn-outline-warning" (click)="cargarPeliculas()" role="button">
-    Actualizar datos
-  </a>
-
   <!-- Sección de películas populares -->
   <div class="populares">
     <div class="populares_texto">POPULARES</div>

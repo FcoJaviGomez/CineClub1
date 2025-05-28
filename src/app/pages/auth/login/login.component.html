@@ -32,6 +32,10 @@
         <a class="div_noTienesCuenta">¿No tienes una cuenta?</a>
         <a class="div_registrate" (click)="irARegistro()">Regístrate</a>
       </div>
+      <!-- Enlace a recuperación -->
+      <div class="div_olvidoContraseña">
+        <a class="div_recuperar" (click)="irARecuperar()">¿Has olvidado tu contraseña?</a>
+      </div>
       <div *ngIf="errorLogin" class="mensaje-error">
         {{ errorLogin }}
       </div>

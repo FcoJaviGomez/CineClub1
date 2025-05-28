@@ -1,11 +1,31 @@
+.paginaConfirmar {
+    background-image: url("../../../../assets/cinefondo.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+
 .confirm-container {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
   max-width: 400px;
   margin: 100px auto;
   padding: 20px;
   text-align: center;
   border: 1px solid #ccc;
   border-radius: 10px;
-  background-color: #f0fdf4;
+  background-color: var(--amarillo);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
 }
 
 .confirm-container p {
@@ -22,4 +42,8 @@ button {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+}
+
+button:hover {
+  background-color: #059669;
 }
