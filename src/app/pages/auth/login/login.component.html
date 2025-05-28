@@ -32,9 +32,14 @@
         <a class="div_noTienesCuenta">¿No tienes una cuenta?</a>
         <a class="div_registrate" (click)="irARegistro()">Regístrate</a>
       </div>
-      <div *ngIf="!validacion[1]" class="mensaje-error">
-        {{ validacion[0] }}
+      <div *ngIf="errorLogin" class="mensaje-error">
+        {{ errorLogin }}
       </div>
+
+      <div *ngIf="mensajeLogin" class="mensaje-exito">
+        {{ mensajeLogin }}
+      </div>
+
     </form>
   </div>
 </div>

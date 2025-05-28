@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SupabaseService } from '../../../services/supabase.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -17,41 +17,53 @@ export class LoginComponent {
     password: ''
   };
 
-  validacion: [string, boolean] = ['', true];
+  mensajeLogin: string = '';
+  errorLogin: string = '';
 
   constructor(
-    private router: Router,
-    private supabaseService: SupabaseService
-  ) { }
+    private supabaseService: SupabaseService,
+    private router: Router
+  ) {}
 
-async iniciarSesion() {
-  const { email, password } = this.usuario;
+  async iniciarSesion() {
+    this.mensajeLogin = '';
+    this.errorLogin = '';
 
-  try {
-    const { data, error } = await this.supabaseService.login(email, password);
+    const { email, password } = this.usuario;
 
-    if (error) {
-      const isNotConfirmed = error.message.toLowerCase().includes('email not confirmed');
-
-      this.validacion = [
-        isNotConfirmed
-          ? 'Debes confirmar tu correo antes de iniciar sesión.'
-          : 'Error al iniciar sesión: ' + error.message,
-        false
-      ];
-
+    // Validación rápida antes del login
+    if (!email || !password) {
+      this.errorLogin = 'Por favor, completa todos los campos.';
       return;
     }
 
-    this.router.navigate(['/home']);
+    try {
+      const { data, error } = await this.supabaseService.login(email, password);
+      const { user, session } = data;
 
-  } catch (error) {
-    console.error('Error inesperado al iniciar sesión:', error);
-    this.validacion = ['Error inesperado al iniciar sesión', false];
+      if (error) {
+        if (error.message.includes('Email not confirmed')) {
+          this.errorLogin = 'Debes confirmar tu correo electrónico antes de iniciar sesión.';
+        } else {
+          this.errorLogin = 'Error al iniciar sesión: ' + error.message;
+        }
+        return;
+      }
+
+      if (user && session) {
+        this.mensajeLogin = '✅ ¡Inicio de sesión exitoso!';
+        setTimeout(() => {
+          this.router.navigate(['/home']);
+        }, 3000);
+      }
+
+    } catch (err: any) {
+      this.errorLogin = 'Ocurrió un error inesperado al iniciar sesión.';
+      console.error(err);
+    }
   }
-}
 
   irARegistro() {
-    this.router.navigate(['/registro']);
+    this.router.navigate(['/register']);
   }
 }
