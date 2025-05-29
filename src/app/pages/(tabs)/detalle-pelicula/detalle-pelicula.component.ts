@@ -21,13 +21,19 @@ export class DetallePeliculaComponent implements OnInit {
   actores: any[] = [];
   cargando = true;
 
+  origen: string = ''; // <- Aquí almacenamos el origen: 'perfil' o 'home'
+
   constructor(
     private route: ActivatedRoute,
     private moviesService: MoviesService,
     private http: HttpClient
-  ) { }
+  ) {}
 
   ngOnInit(): void {
+    // Capturar el parámetro 'origen' de los query params
+    this.route.queryParams.subscribe(params => {
+      this.origen = params['origen'] || '';
+    });
 
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
@@ -57,5 +63,4 @@ export class DetallePeliculaComponent implements OnInit {
       });
     }
   }
-
 }

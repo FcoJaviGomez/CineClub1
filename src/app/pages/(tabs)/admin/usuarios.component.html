@@ -1,31 +1,33 @@
-<div class="usuarios-admin-container">
-    <h2>Gestión de Usuarios</h2>
+<body class="body">
+    <div class="usuarios-admin-container">
+        <h2>Gestión de Usuarios</h2>
 
-    <div *ngIf="cargando">Cargando usuarios...</div>
+        <div *ngIf="cargando">Cargando usuarios...</div>
 
-    <table *ngIf="!cargando && usuarios.length > 0">
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Apellidos</th>
-                <th>Email</th>
-                <th>Rol</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let usuario of usuarios">
-                <td>{{ usuario.nombre }}</td>
-                <td>{{ usuario.apellidos }}</td>
-                <td>{{ usuario.email }}</td>
-                <td>{{ usuario.rol }}</td>
-                <td>
-                    <button (click)="cambiarRol(usuario)">Cambiar Rol</button>
-                    <button (click)="eliminarUsuario(usuario.id)">Eliminar</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+        <table *ngIf="!cargando && usuarios.length > 0">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellidos</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let usuario of usuarios">
+                    <td>{{ usuario.nombre }}</td>
+                    <td>{{ usuario.apellidos }}</td>
+                    <td>{{ usuario.email }}</td>
+                    <td>{{ usuario.rol }}</td>
+                    <td>
+                        <button (click)="cambiarRol(usuario)">Cambiar Rol</button>
+                        <button (click)="eliminarUsuario(usuario.id)">Eliminar</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
-    <p *ngIf="!cargando && usuarios.length === 0">No hay usuarios registrados.</p>
-</div>
+        <p *ngIf="!cargando && usuarios.length === 0">No hay usuarios registrados.</p>
+    </div>
+</body>

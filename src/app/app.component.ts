@@ -38,8 +38,9 @@ export class AppComponent implements OnInit {
       });
   }
 
-  private actualizarLayout(url: string) {
-    const ocultar = ['/login', '/registro', '/email-confirm', '/reset-password', '/forgot-password'].includes(url);
-    this.mostrarLayout$.next(!ocultar);
-  }
+ private actualizarLayout(url: string) {
+  const rutasOcultas = ['/login', '/registro', '/email-confirm', '/reset-password', '/forgot-password'];
+  const ocultar = rutasOcultas.some(ruta => url.startsWith(ruta));
+  this.mostrarLayout$.next(!ocultar);
+}
 }

@@ -1,6 +1,15 @@
+.body {
+    background-color: var(--fondo);
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 78vh;
+}
+
 .usuarios-admin-container {
     max-width: 900px;
-    margin: 40px auto;
+    
     padding: 20px;
     background-color: var(--amarillo);
     color: var(--negro);

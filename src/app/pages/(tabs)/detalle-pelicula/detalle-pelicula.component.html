@@ -1,9 +1,21 @@
-<div class="volver-container">
-  <a routerLink="/perfil" class="volver-link">
-    <i class="fa-solid fa-arrow-left"></i> Volver a perfil
+<!-- Botón de volver según origen o por defecto -->
+<div class="volver-fijo">
+  <a
+    [routerLink]="origen === 'perfil' ? '/perfil' : '/home'"
+    class="volver-fijo-link"
+  >
+    <i class="fa-solid fa-arrow-left"></i>
+    {{
+      origen === 'perfil'
+        ? 'Volver a perfil'
+        : origen === 'home'
+        ? 'Volver al inicio'
+        : 'Volver al inicio'
+    }}
   </a>
 </div>
 
+<!-- Contenido principal -->
 <div class="body" *ngIf="infoPelicula && actores">
   <div class="detalle-card">
     <!-- Imagen más pequeña -->

@@ -1,3 +1,31 @@
+/* Botón fijo estilo navegación */
+.volver-fijo {
+  position: fixed;
+  top: 100px;
+  left: 20px;
+  z-index: 999;
+}
+
+.volver-fijo-link {
+  background-color: #fff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 16px;
+  color: var(--marron);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.volver-fijo-link:hover {
+  background-color: var(--marron);
+  color: var(--blanco);
+}
+
 .body {
   min-height: 78vh;
   width: 100%;
