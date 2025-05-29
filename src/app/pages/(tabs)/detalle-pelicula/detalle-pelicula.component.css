@@ -130,11 +130,31 @@
   margin-bottom: 10px;
 }
 
+.volver-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.volver-link {
+  text-decoration: none;
+  font-size: 18px;
+  color: var(--marron);
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.3s ease;
+}
+
+.volver-link:hover {
+  color: var(--negro);
+}
+
+
 @keyframes spin {
   to {
     transform: rotate(360deg);
   }
 }
-
-
-

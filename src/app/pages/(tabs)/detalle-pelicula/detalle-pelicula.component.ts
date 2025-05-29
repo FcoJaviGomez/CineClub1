@@ -25,10 +25,10 @@ export class DetallePeliculaComponent implements OnInit {
     private route: ActivatedRoute,
     private moviesService: MoviesService,
     private http: HttpClient
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    
+
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       // Detalles de la película
@@ -57,5 +57,5 @@ export class DetallePeliculaComponent implements OnInit {
       });
     }
   }
-  
+
 }

@@ -51,10 +51,7 @@ export class LoginComponent {
       }
 
       if (user && session) {
-        this.mensajeLogin = '✅ ¡Inicio de sesión exitoso!';
-        setTimeout(() => {
           this.router.navigate(['/home']);
-        }, 3000);
       }
 
     } catch (err: any) {

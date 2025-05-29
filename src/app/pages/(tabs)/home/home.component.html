@@ -1,20 +1,19 @@
 <!-- Cuerpo principal: se muestra si ya se cargaron los datos -->
+
 <body class="body" *ngIf="!cargando && peliculasActuales.length && peliculasPopulares.length">
 
   <!-- Sección de películas populares -->
   <div class="populares">
     <div class="populares_texto">POPULARES</div>
     <section class="populares_peliculas" #scrollContainer>
-  <a *ngFor="let peliculaPopular of peliculasPopulares"
-     [routerLink]="['/detalle-pelicula', peliculaPopular.id]">
-    <div class="populares_card">
-      <img *ngIf="peliculaPopular.poster_path"
-           [src]="'https://image.tmdb.org/t/p/w500' + peliculaPopular.poster_path"
-           alt="{{ peliculaPopular.title }}"
-           class="populares_imagen">
-    </div>
-  </a>
-</section>
+      <a *ngFor="let peliculaPopular of peliculasPopulares" [routerLink]="['/detalle-pelicula', peliculaPopular.id]">
+        <div class="populares_card">
+          <img *ngIf="peliculaPopular.poster_path"
+            [src]="'https://image.tmdb.org/t/p/w500' + peliculaPopular.poster_path" alt="{{ peliculaPopular.title }}"
+            class="populares_imagen">
+        </div>
+      </a>
+    </section>
 
   </div>
 
@@ -22,17 +21,18 @@
   <div class="cartelera">
     <div class="cartelera_texto">CARTELERA</div>
     <section class="cartelera_peliculas">
-      <a *ngFor="let peliculaActual of peliculasActuales"
-         style="text-decoration: none;"
-         [routerLink]="['/detalle-pelicula', peliculaActual.id]">
-        <div class="cartelera_card">
-          <img *ngIf="peliculaActual.poster_path"
-               [src]="'https://image.tmdb.org/t/p/w500' + peliculaActual.poster_path"
-               alt="{{ peliculaActual.title }}"
-               class="cartelera_imagen">
-          <div class="cartelera_titulo">{{ peliculaActual.title }}</div>
-        </div>
-      </a>
+      <div *ngFor="let peliculaActual of peliculasActuales" class="cartelera_card">
+        <img *ngIf="peliculaActual.poster_path" [src]="'https://image.tmdb.org/t/p/w500' + peliculaActual.poster_path"
+          alt="{{ peliculaActual.title }}" class="cartelera_imagen">
+
+        <div class="cartelera_titulo">{{ peliculaActual.title }}</div>
+
+        <button class="favorito-corazon" (click)="agregarAFavoritos(peliculaActual)">
+          <i class="fa-solid fa-heart icono-favorito" [ngClass]="{ 'favorito': esFavorita(peliculaActual.id) }"></i>
+        </button>
+
+      </div>
+
     </section>
   </div>
 

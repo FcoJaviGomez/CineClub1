@@ -1,10 +1,15 @@
+<div class="volver-container">
+  <a routerLink="/perfil" class="volver-link">
+    <i class="fa-solid fa-arrow-left"></i> Volver a perfil
+  </a>
+</div>
+
 <div class="body" *ngIf="infoPelicula && actores">
   <div class="detalle-card">
     <!-- Imagen más pequeña -->
     <div class="detalle-imagen">
-      <img [src]="'https://image.tmdb.org/t/p/w500' + infoPelicula.poster_path"
-           class="img-pelicula"
-           alt="{{ infoPelicula.title }}">
+      <img [src]="'https://image.tmdb.org/t/p/w500' + infoPelicula.poster_path" class="img-pelicula"
+        alt="{{ infoPelicula.title }}">
     </div>
 
     <!-- Detalles a la derecha -->
@@ -32,8 +37,7 @@
         <div class="actor">
           <img [src]="actor.profile_path 
             ? 'https://image.tmdb.org/t/p/w500' + actor.profile_path 
-            : 'assets/sin-foto.png'"
-            class="actor_imagen">
+            : 'assets/sin-foto.png'" class="actor_imagen">
           <div class="actor_nombre">{{ actor.name }}</div>
         </div>
       </div>

@@ -3,15 +3,13 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 import { MoviesService } from '../../../services/movies.service';
+import { SupabaseService } from '../../../services/supabase.service';
 import { Movie } from '../../../models/movie.model';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule
-  ],
+  imports: [CommonModule, RouterModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
@@ -20,12 +18,20 @@ export class HomeComponent implements OnInit, AfterViewInit {
   peliculasActuales: Movie[] = [];
   cargando = true;
 
+  favoritos: number[] = [];
+  usuarioId: string | null = null;
+
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
 
-  constructor(private moviesService: MoviesService) {}
+  constructor(
+    private moviesService: MoviesService,
+    private supabaseService: SupabaseService
+  ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.cargarPeliculas();
+    await this.obtenerUsuarioId();
+    await this.cargarFavoritos();
   }
 
   ngAfterViewInit() {
@@ -45,6 +51,68 @@ export class HomeComponent implements OnInit, AfterViewInit {
         this.cargando = false;
       }
     });
+  }
+
+  async obtenerUsuarioId() {
+    const { data: { user } } = await this.supabaseService.getUser();
+    if (!user) return;
+
+    const { data: perfil } = await this.supabaseService.client
+      .from('usuarios')
+      .select('id')
+      .eq('email', user.email)
+      .maybeSingle();
+
+    this.usuarioId = perfil?.id || null;
+  }
+
+  async cargarFavoritos() {
+    if (!this.usuarioId) return;
+
+    const { data, error } = await this.supabaseService.client
+      .from('favoritos')
+      .select('tmdb_id')
+      .eq('usuario_id', this.usuarioId);
+
+    if (!error && data) {
+      this.favoritos = data.map(f => f.tmdb_id);
+    }
+  }
+
+  esFavorita(id: number): boolean {
+    return this.favoritos.includes(id);
+  }
+
+  async agregarAFavoritos(pelicula: any) {
+    if (!this.usuarioId) return;
+
+    const id = pelicula.id;
+    if (this.esFavorita(id)) {
+      alert('Ya tienes esta película en favoritos.');
+      return;
+    }
+
+    const { error } = await this.supabaseService.client
+      .from('favoritos')
+      .insert({
+        usuario_id: this.usuarioId,
+        tmdb_id: id,
+        titulo: pelicula.title,
+        poster_path: pelicula.poster_path,
+        fecha_lanzamiento: pelicula.release_date
+      });
+
+    if (error) {
+      if (error.code === '23505') {
+        console.warn('Película ya en favoritos (conflicto).');
+        this.favoritos.push(id);
+      } else {
+        console.error('Error al guardar favorito', error);
+        alert('No se pudo agregar a favoritos');
+      }
+    } else {
+      this.favoritos.push(id);
+    }
   }
 
   activarScrollConArrastre(element: HTMLElement) {
@@ -73,7 +141,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       if (!isDown) return;
       e.preventDefault();
       const x = e.pageX - element.offsetLeft;
-      const walk = (x - startX) * 1.5; // Ajusta la velocidad si quieres
+      const walk = (x - startX) * 1.5;
       element.scrollLeft = scrollLeft - walk;
     });
   }

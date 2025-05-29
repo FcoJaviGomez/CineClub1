@@ -2,12 +2,49 @@
     <div class="perfil-container" *ngIf="usuario">
         <h2>Mi Perfil</h2>
 
-        <div class="perfil-info">
-            <p><strong>Nombre:</strong> {{ usuario.nombre }}</p>
-            <p><strong>Apellidos:</strong> {{ usuario.apellidos }}</p>
-            <p><strong>Email:</strong> {{ usuario.email }}</p>
-            <p><strong>Fecha de nacimiento:</strong> {{ usuario.fecha_nacimiento }}</p>
-            <p><strong>Creado el:</strong> {{ usuario.created_at | date:'short' }}</p>
+        <form (ngSubmit)="guardarCambios()" #formPerfil="ngForm" class="perfil-form">
+
+            <div class="form-group">
+                <label>Nombre</label>
+                <input [(ngModel)]="usuario.nombre" name="nombre" required />
+            </div>
+
+            <div class="form-group">
+                <label>Apellidos</label>
+                <input [(ngModel)]="usuario.apellidos" name="apellidos" required />
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input [(ngModel)]="usuario.email" name="email" required />
+            </div>
+
+            <div class="form-group">
+                <label>Fecha de nacimiento</label>
+                <input [value]="usuario.fecha_nacimiento" readonly />
+            </div>
+
+            <div class="form-group">
+                <label>Creado el</label>
+                <input [value]="usuario.created_at | date:'short'" readonly />
+            </div>
+
+            <button type="submit" class="guardar-cambios">Guardar cambios</button>
+        </form>
+
+        <div class="favoritos-container" *ngIf="favoritas?.length">
+            <h3>Mis Películas Favoritas</h3>
+            <div class="favoritos-grid">
+                <div *ngFor="let peli of favoritas" class="favorito-card">
+                    <a [routerLink]="['/detalle-pelicula', peli.tmdb_id]">
+                        <img [src]="'https://image.tmdb.org/t/p/w500' + peli.poster_path" [alt]="peli.titulo"
+                            class="favorito-img">
+                    </a>
+                    <button class="eliminar-btn" (click)="eliminarFavorito(peli.tmdb_id)">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+            </div>
         </div>
 
         <button class="cerrar-sesion-boton" (click)="cerrarSesion()">

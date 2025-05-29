@@ -25,7 +25,7 @@
 }
 
 .populares_peliculas {
-     max-height: 300px;
+    max-height: 300px;
     display: flex;
     overflow-x: auto;
     overflow-y: hidden;
@@ -37,8 +37,8 @@
 }
 
 .populares_peliculas.active {
-  cursor: grabbing;
-  cursor: -webkit-grabbing;
+    cursor: grabbing;
+    cursor: -webkit-grabbing;
 }
 
 .populares_peliculas::-webkit-scrollbar {
@@ -93,6 +93,7 @@
 .cartelera_card {
     height: 400px;
     width: 310px;
+    position: relative;
     margin-bottom: 50px;
     border-radius: 5px;
     text-decoration: none;
@@ -112,4 +113,37 @@
 .cartelera_card:hover {
     transform: scale(1.1);
 }
-  
+
+.icono-favorito {
+    font-size: 18px;
+    color: #bbb;
+    transition: color 0.3s ease;
+}
+
+.icono-favorito.favorito {
+    color: #e74c3c;
+}
+
+.favorito-corazon {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    /* antes era right: 12px */
+    background: white;
+    border: 2px solid #ddd;
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 2;
+    transition: transform 0.2s ease, border-color 0.3s ease;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.favorito-corazon:hover {
+    transform: scale(1.2);
+    color: #e74c3c;
+}
