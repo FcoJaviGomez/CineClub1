@@ -1,6 +1,7 @@
 [build]
-  publish = "dist/mi-app-peliculas/browser"
-  command = "ng build --configuration production"
+  base = "cineclub-angular"
+  publish = "dist/cineclub-angular"
+  command = "npm run build"
 
 [[redirects]]
   from = "/*"
