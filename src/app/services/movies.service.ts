@@ -23,22 +23,28 @@ export class MoviesService {
   private async crearCabeceraAutorizada(): Promise<HttpHeaders> {
     const { data } = await this.supabase.auth.getSession();
     const token = data.session?.access_token || '';
+    console.log('[MoviesService] Token JWT:', token);
     return new HttpHeaders({ Authorization: `Bearer ${token}` });
   }
 
   // POPULARES
   getPopularMovies(): Observable<any> {
-    return from(this.crearCabeceraAutorizada()).pipe(
-      switchMap(headers =>
-        this.http.get<any>(this.popularesUrl, { headers }).pipe(
-          catchError(error => {
-            console.error('Error al obtener populares', error);
-            return throwError(() => new Error('Error al obtener populares'));
-          })
-        )
-      )
+    return from(this.supabase.auth.getSession()).pipe(
+      switchMap(({ data }) => {
+        const token = data.session?.access_token;
+        if (!token) {
+          return throwError(() => new Error('Usuario no autenticado'));
+        }
+        const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+        return this.http.get<any>(this.popularesUrl, { headers });
+      }),
+      catchError(error => {
+        console.error('Error al obtener populares', error);
+        return throwError(() => new Error('Error al obtener populares'));
+      })
     );
   }
+
 
   // DETALLES
   getMovieDetails(id: string): Observable<any> {
