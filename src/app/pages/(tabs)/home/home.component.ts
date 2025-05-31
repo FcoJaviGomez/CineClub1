@@ -29,9 +29,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
   ) { }
 
   async ngOnInit() {
-    this.cargarPeliculas();
     await this.obtenerUsuarioId();
     await this.cargarFavoritos();
+    this.cargarPeliculas();
   }
 
   ngAfterViewInit() {
