@@ -1,16 +1,11 @@
 <!-- Botón de volver según origen o por defecto -->
 <div class="volver-fijo">
-  <a
-    [routerLink]="origen === 'perfil' ? '/perfil' : '/home'"
-    class="volver-fijo-link"
-  >
+  <a [routerLink]="origen === 'perfil' ? '/perfil' : '/home'" class="volver-fijo-link">
     <i class="fa-solid fa-arrow-left"></i>
     {{
-      origen === 'perfil'
-        ? 'Volver a perfil'
-        : origen === 'home'
-        ? 'Volver al inicio'
-        : 'Volver al inicio'
+    origen === 'perfil'
+    ? 'Volver a perfil'
+    : 'Volver al inicio'
     }}
   </a>
 </div>
@@ -18,13 +13,11 @@
 <!-- Contenido principal -->
 <div class="body" *ngIf="infoPelicula && actores">
   <div class="detalle-card">
-    <!-- Imagen más pequeña -->
     <div class="detalle-imagen">
       <img [src]="'https://image.tmdb.org/t/p/w500' + infoPelicula.poster_path" class="img-pelicula"
-        alt="{{ infoPelicula.title }}">
+        alt="{{ infoPelicula.title }}" />
     </div>
 
-    <!-- Detalles a la derecha -->
     <div class="detalle-info">
       <h2>{{ infoPelicula.title }}</h2>
       <p class="tagline" *ngIf="infoPelicula.tagline">"{{ infoPelicula.tagline }}"</p>
@@ -40,20 +33,58 @@
     </div>
   </div>
 
-  <!-- Sección de actores -->
+  <!-- Reparto -->
   <div class="actores">
     <h3>Reparto principal</h3>
-
     <section class="actores_div">
       <div *ngFor="let actor of actores">
         <div class="actor">
-          <img [src]="actor.profile_path 
-            ? 'https://image.tmdb.org/t/p/w500' + actor.profile_path 
-            : 'assets/sin-foto.png'" class="actor_imagen">
+          <img
+            [src]="actor.profile_path ? 'https://image.tmdb.org/t/p/w500' + actor.profile_path : 'assets/sin-foto.png'"
+            class="actor_imagen" />
           <div class="actor_nombre">{{ actor.name }}</div>
         </div>
       </div>
     </section>
+  </div>
+
+  <!-- Reseñas -->
+  <div class="resenas">
+    <h3>Opiniones</h3>
+
+    <ng-container *ngIf="resenas && resenas.length > 0; else noResenas">
+      <p class="puntuacion-media">
+        Puntuación media: {{ puntuacionMedia }} ⭐
+      </p>
+
+
+      <div *ngFor="let r of resenas" class="resena">
+        <p><strong>{{ r.puntuacion }} estrellas</strong></p>
+        <p>{{ r.comentario }}</p>
+        <hr />
+      </div>
+    </ng-container>
+
+    <ng-template #noResenas>
+      <p>Esta película aún no tiene reseñas.</p>
+    </ng-template>
+
+    <!-- Formulario para reseñar -->
+    <form *ngIf="infoPelicula" (ngSubmit)="enviarResena(infoPelicula.id)">
+      <h4>{{ miResena ? 'Actualizar tu reseña' : 'Escribe tu reseña' }}</h4>
+
+      <label>Puntuación:</label>
+      <div class="estrellas">
+        <i *ngFor="let estrella of [1, 2, 3, 4, 5]" class="fa-star" [class.fa-solid]="estrella <= nuevaPuntuacion"
+          [class.fa-regular]="estrella > nuevaPuntuacion" (click)="nuevaPuntuacion = estrella"></i>
+      </div>
+
+      <label>Comentario:</label>
+      <textarea [(ngModel)]="nuevoComentario" name="comentario" rows="3" required
+        placeholder="Escribe tu opinión sobre la película..."></textarea>
+
+      <button type="submit">Enviar reseña</button>
+    </form>
   </div>
 </div>
 

@@ -4,14 +4,17 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 import { MoviesService } from '../../../services/movies.service';
+import { SupabaseService } from '../../../services/supabase.service';
 import { Movie } from '../../../models/movie.model';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 
+import { FormsModule } from '@angular/forms';
+
 @Component({
   selector: 'app-detalle-pelicula',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './detalle-pelicula.component.html',
   styleUrls: ['./detalle-pelicula.component.css']
 })
@@ -21,46 +24,136 @@ export class DetallePeliculaComponent implements OnInit {
   actores: any[] = [];
   cargando = true;
 
-  origen: string = ''; // <- Aquí almacenamos el origen: 'perfil' o 'home'
+  origen: string = '';
+
+  // Reseñas
+  resenas: any[] = [];
+  puntuacionMedia: number | null = null;
+  miResena: any = null;
+  nuevaPuntuacion: number = 5;
+  nuevoComentario: string = '';
 
   constructor(
     private route: ActivatedRoute,
     private moviesService: MoviesService,
+    private supabaseService: SupabaseService,
     private http: HttpClient
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    // Capturar el parámetro 'origen' de los query params
     this.route.queryParams.subscribe(params => {
       this.origen = params['origen'] || '';
     });
 
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      // Detalles de la película
-      this.moviesService.getMovieDetails(id).subscribe({
-        next: (data) => {
-          console.log('Detalles completos de la película:', data);
-          this.infoPelicula = data;
-          this.infoGenres = data.genres || [];
-        },
-        error: (err) => {
-          console.error('Error al cargar detalles:', err);
-        }
-      });
+      this.cargarDetalles(id);
+      this.cargarActores(id);
+      this.cargarResenas(+id);
+      this.cargarMiResena(+id);
+    }
+  }
 
-      // Cast de la película (actores)
-      const url = `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${environment.tmdbApiKey}&language=es-ES`;
-      this.http.get<any>(url).subscribe({
-        next: (response) => {
-          this.actores = response.cast.slice(0, 12); // Mostrar primeros 12
-          this.cargando = false;
-        },
-        error: (err) => {
-          console.error('Error al cargar actores:', err);
-          this.cargando = false;
-        }
-      });
+  cargarDetalles(id: string) {
+    this.moviesService.getMovieDetails(id).subscribe({
+      next: (data) => {
+        this.infoPelicula = data;
+        this.infoGenres = data.genres || [];
+      },
+      error: (err) => {
+        console.error('Error al cargar detalles:', err);
+      }
+    });
+  }
+
+  cargarActores(id: string) {
+    const url = `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${environment.tmdbApiKey}&language=es-ES`;
+    this.http.get<any>(url).subscribe({
+      next: (response) => {
+        this.actores = response.cast.slice(0, 12);
+        this.cargando = false;
+      },
+      error: (err) => {
+        console.error('Error al cargar actores:', err);
+        this.cargando = false;
+      }
+    });
+  }
+
+  async cargarResenas(tmdb_id: number) {
+    const { data, error } = await this.supabaseService.client
+      .from('reseñas')
+      .select('comentario, puntuacion, usuario_id, creado_en')
+      .eq('tmdb_id', tmdb_id);
+
+    if (!error && data) {
+      this.resenas = data;
+      this.puntuacionMedia = this.calcularMedia(data);
+    }
+  }
+
+  calcularMedia(resenas: any[]): number {
+    const total = resenas.reduce((sum, r) => sum + r.puntuacion, 0);
+    return Math.round((total / resenas.length) * 10) / 10;
+  }
+
+  async cargarMiResena(tmdb_id: number) {
+    const { data: { user } } = await this.supabaseService.getUser();
+    if (!user) return;
+
+    const { data: perfil } = await this.supabaseService.client
+      .from('usuarios')
+      .select('id')
+      .eq('email', user.email)
+      .maybeSingle();
+
+    if (!perfil) return;
+
+    const { data, error } = await this.supabaseService.client
+      .from('reseñas')
+      .select('*')
+      .eq('tmdb_id', tmdb_id)
+      .eq('usuario_id', perfil.id)
+      .maybeSingle();
+
+    if (!error && data) {
+      this.miResena = data;
+      this.nuevaPuntuacion = data.puntuacion;
+      this.nuevoComentario = data.comentario;
+    }
+  }
+
+  async enviarResena(tmdb_id: number) {
+    const { data: { user } } = await this.supabaseService.getUser();
+    if (!user) return;
+
+    const { data: perfil } = await this.supabaseService.client
+      .from('usuarios')
+      .select('id')
+      .eq('email', user.email)
+      .maybeSingle();
+
+    if (!perfil) return;
+
+    const payload = {
+      usuario_id: perfil.id,
+      tmdb_id,
+      comentario: this.nuevoComentario,
+      puntuacion: this.nuevaPuntuacion
+    };
+
+    const { error } = await this.supabaseService.client
+      .from('reseñas')
+      .upsert([payload], { ignoreDuplicates: false })
+      .select();
+
+    if (!error) {
+      await this.cargarResenas(tmdb_id);
+      await this.cargarMiResena(tmdb_id);
+      alert('Reseña enviada correctamente');
+    } else {
+      console.error('Error al enviar reseña:', error);
+      alert('No se pudo guardar la reseña');
     }
   }
 }

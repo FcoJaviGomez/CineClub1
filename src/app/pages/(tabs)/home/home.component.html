@@ -21,17 +21,18 @@
     <div class="cartelera_texto">CARTELERA</div>
     <section class="cartelera_peliculas">
       <div *ngFor="let peliculaActual of peliculasActuales" class="cartelera_card">
-        <img *ngIf="peliculaActual.poster_path" [src]="'https://image.tmdb.org/t/p/w500' + peliculaActual.poster_path"
-          alt="{{ peliculaActual.title }}" class="cartelera_imagen">
 
-        <div class="cartelera_titulo">{{ peliculaActual.title }}</div>
+        <a [routerLink]="['/detalle-pelicula', peliculaActual.id]" class="card-link">
+          <img *ngIf="peliculaActual.poster_path" [src]="'https://image.tmdb.org/t/p/w500' + peliculaActual.poster_path"
+            alt="{{ peliculaActual.title }}" class="cartelera_imagen">
+          <div class="cartelera_titulo">{{ peliculaActual.title }}</div>
+        </a>
 
         <button class="favorito-corazon" (click)="agregarAFavoritos(peliculaActual)">
           <i class="fa-solid fa-heart icono-favorito" [ngClass]="{ 'favorito': esFavorita(peliculaActual.id) }"></i>
         </button>
 
       </div>
-
     </section>
   </div>
 

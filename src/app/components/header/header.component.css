@@ -127,3 +127,11 @@
     background-color: var(--marron);
     color: var(--blanco);
 }
+
+.avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--marron);
+}

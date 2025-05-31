@@ -8,8 +8,10 @@
         <button *ngIf="esAdmin" class="admin-boton" (click)="gestionarUsuarios()">
             <i class="fa-solid fa-users-gear"></i> Gestionar usuarios
         </button>
-        <button class="perfil-boton" (click)="verPerfil()">
-            <i class="fa-solid fa-user"></i> Mi Perfil
-        </button>
+        <div class="perfil-menu" (click)="verPerfil()">
+            <img [src]="imagenPerfil" alt="Foto perfil" class="avatar" />
+            <span>{{ nombreUsuario }}</span>
+        </div>
+
     </div>
 </header>

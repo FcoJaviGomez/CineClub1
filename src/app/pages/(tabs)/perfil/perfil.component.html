@@ -2,8 +2,11 @@
     <div class="perfil-container" *ngIf="usuario">
         <h2>Mi Perfil</h2>
 
-        <form (ngSubmit)="guardarCambios()" #formPerfil="ngForm" class="perfil-form">
+        <!-- Imagen de perfil -->
+        <img [src]="imagenPreview" alt="Foto de perfil" class="imagen-preview" />
+        <input type="file" accept="image/*" (change)="capturarImagen($event)" />
 
+        <form (ngSubmit)="guardarCambios()" #formPerfil="ngForm" class="perfil-form">
             <div class="form-group">
                 <label>Nombre</label>
                 <input [(ngModel)]="usuario.nombre" name="nombre" required />
@@ -26,7 +29,7 @@
 
             <div class="form-group">
                 <label>Creado el</label>
-                <input [value]="usuario.created_at | date:'short'" readonly />
+                <input [value]="usuario.created_at | date: 'short'" readonly />
             </div>
 
             <button type="submit" class="guardar-cambios">Guardar cambios</button>
@@ -36,15 +39,9 @@
             <h3>Mis Películas Favoritas</h3>
             <div class="favoritos-grid">
                 <div *ngFor="let peli of favoritas" class="favorito-card">
-                    <a 
-                        [routerLink]="['/detalle-pelicula', peli.tmdb_id]" 
-                        [queryParams]="{ origen: 'perfil' }"
-                    >
-                        <img 
-                        [src]="'https://image.tmdb.org/t/p/w500' + peli.poster_path" 
-                        [alt]="peli.titulo"
-                        class="favorito-img"
-                        >
+                    <a [routerLink]="['/detalle-pelicula', peli.tmdb_id]" [queryParams]="{ origen: 'perfil' }">
+                        <img [src]="'https://image.tmdb.org/t/p/w500' + peli.poster_path" [alt]="peli.titulo"
+                            class="favorito-img" />
                     </a>
                     <button class="eliminar-btn" (click)="eliminarFavorito(peli.tmdb_id)">
                         <i class="fa-solid fa-trash"></i>

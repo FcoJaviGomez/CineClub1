@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SupabaseService } from '../../services/supabase.service';
 
@@ -14,13 +14,46 @@ export class HeaderComponent implements OnInit {
   menuAbierto = false;
   esAdmin = false;
 
+  imagenPerfil: string = 'assets/sin-foto.png';
+  nombreUsuario: string = '';
+
   constructor(
     private router: Router,
     private supabaseService: SupabaseService
   ) { }
 
-  async ngOnInit() {
-    this.esAdmin = await this.supabaseService.esAdmin();
+  ngOnInit() {
+    this.cargarUsuario();
+
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.cargarUsuario();
+      }
+    });
+  }
+
+  async cargarUsuario() {
+    const { data, error } = await this.supabaseService.getUser();
+    const user = data?.user;
+
+    if (error || !user) {
+      console.warn('No se pudo cargar usuario:', error);
+      return;
+    }
+
+    const { data: perfil } = await this.supabaseService.client
+      .from('usuarios')
+      .select('nombre, imagen_url, rol')
+      .eq('email', user.email)
+      .maybeSingle();
+
+    if (perfil) {
+      this.nombreUsuario = perfil.nombre || 'Mi Perfil';
+      this.imagenPerfil = perfil.imagen_url || 'assets/sin-foto.png';
+      this.esAdmin = perfil.rol === 'admin';
+    } else {
+      this.esAdmin = false;
+    }
   }
 
   irHome(): void {
