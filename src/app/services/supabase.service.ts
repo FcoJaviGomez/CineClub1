@@ -50,6 +50,25 @@ export class SupabaseService {
     return data;
   }
 
+  async deleteUserById(userId: string) {
+    const res = await fetch('https://tcbplmfcfwkjvgrpnjxr.supabase.co/functions/v1/admin-delete-user', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${await this.client.auth.getSession().then(s => s.data.session?.access_token)}`
+      },
+      body: JSON.stringify({ user_id: userId })
+    });
+
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error || 'Error al eliminar usuario');
+    }
+
+    return data;
+  }
+
+
   // LOGIN: Inicia sesión y, si el usuario no existe en la tabla 'usuarios', lo inserta
   async login(email: string, password: string): Promise<AuthResponse> {
     const response = await this.supabase.auth.signInWithPassword({ email, password });
