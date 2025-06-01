@@ -148,6 +148,50 @@ export class PerfilComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
+  async eliminarCuenta() {
+    const confirmacion = confirm('¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.');
+    if (!confirmacion) return;
+
+    try {
+      const { data, error: userError } = await this.supabaseService.getUser();
+      const user = data?.user;
+
+      if (!user || userError) {
+        console.error('❌ Usuario no autenticado');
+        alert('No se pudo obtener el usuario autenticado.');
+        return;
+      }
+
+      // Eliminar el perfil del usuario en la tabla 'usuarios'
+      const { error: deleteProfileError } = await this.supabaseService.client
+        .from('usuarios')
+        .delete()
+        .eq('email', user.email);
+
+      if (deleteProfileError) {
+        console.error('❌ Error al eliminar perfil:', deleteProfileError);
+        alert('Error al eliminar tu perfil.');
+        return;
+      }
+
+      // Eliminar la cuenta del sistema de autenticación
+      const { error: deleteUserError } = await this.supabaseService.deleteUser();
+
+      if (deleteUserError) {
+        console.error('❌ Error al eliminar cuenta de Supabase:', deleteUserError);
+        alert('Error al eliminar tu cuenta.');
+        return;
+      }
+
+      alert('Cuenta eliminada correctamente.');
+      this.router.navigate(['/login']);
+    } catch (e) {
+      console.error('❌ Error inesperado al eliminar la cuenta:', e);
+      alert('Ocurrió un error al eliminar la cuenta.');
+    }
+  }
+
+
   irADetalle(tmdb_id: number) {
     this.router.navigate(['/detalle-pelicula', tmdb_id], {
       queryParams: { origen: 'perfil' }
