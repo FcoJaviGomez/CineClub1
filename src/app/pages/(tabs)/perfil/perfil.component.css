@@ -75,6 +75,28 @@
     color: var(--blanco);
 }
 
+.eliminar-cuenta-boton {
+    margin-top: 25px;
+    padding: 10px 14px;
+    font-size: 15px;
+    background-color: var(--amarillo);
+    color: var(--negro);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0px 1px 3px 1px var(--negro);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+    width: 100%;
+}
+
+.eliminar-cuenta-boton:hover {
+    background-color: red;
+    color: var(--blanco);
+}
+
 p {
     text-align: center;
     font-size: 16px;

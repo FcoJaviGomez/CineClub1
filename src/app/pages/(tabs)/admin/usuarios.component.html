@@ -4,29 +4,31 @@
 
         <div *ngIf="cargando">Cargando usuarios...</div>
 
-        <table *ngIf="!cargando && usuarios.length > 0">
+        <div class="usuarios-scroll-wrapper" *ngIf="!cargando && usuarios.length > 0">
+            <table>
             <thead>
                 <tr>
-                    <th>Nombre</th>
-                    <th>Apellidos</th>
-                    <th>Email</th>
-                    <th>Rol</th>
-                    <th>Acciones</th>
+                <th>Nombre</th>
+                <th>Apellidos</th>
+                <th>Email</th>
+                <th>Rol</th>
+                <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let usuario of usuarios">
-                    <td>{{ usuario.nombre }}</td>
-                    <td>{{ usuario.apellidos }}</td>
-                    <td>{{ usuario.email }}</td>
-                    <td>{{ usuario.rol }}</td>
-                    <td>
-                        <button (click)="cambiarRol(usuario)">Cambiar Rol</button>
-                        <button (click)="eliminarUsuario(usuario.id)">Eliminar</button>
-                    </td>
+                <td>{{ usuario.nombre }}</td>
+                <td>{{ usuario.apellidos }}</td>
+                <td>{{ usuario.email }}</td>
+                <td>{{ usuario.rol }}</td>
+                <td>
+                    <button (click)="cambiarRol(usuario)">Cambiar Rol</button>
+                    <button (click)="eliminarUsuario(usuario.id)">Eliminar</button>
+                </td>
                 </tr>
             </tbody>
-        </table>
+            </table>
+        </div>
 
         <p *ngIf="!cargando && usuarios.length === 0">No hay usuarios registrados.</p>
     </div>
