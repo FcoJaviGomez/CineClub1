@@ -34,8 +34,6 @@ export class SupabaseService {
     const session = await this.client.auth.getSession();
     const accessToken = session.data.session?.access_token;
 
-    console.log('Token enviado:', accessToken); // <--- importante
-
     const res = await fetch('https://tcbplmfcfwkjvgrpnjxr.supabase.co/functions/v1/delete-user', {
       method: 'POST',
       headers: {
@@ -46,7 +44,6 @@ export class SupabaseService {
 
     const data = await res.json();
     if (!res.ok) {
-      console.error('Error desde función:', data); // <--- importante
       throw new Error(data.error || 'Error al eliminar la cuenta');
     }
 
