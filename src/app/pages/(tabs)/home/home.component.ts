@@ -130,14 +130,16 @@ export class HomeComponent implements OnInit, AfterViewInit {
 cargarGeneros() {
   this.moviesService.getGenres().subscribe({
     next: (res) => {
+      console.log('✅ Géneros recibidos desde Supabase:', res); // ← Aquí va el log
       this.generos = res.genres;
       this.generosFiltrados = res.genres;
     },
     error: (err) => {
-      console.error('Error al cargar géneros', err);
+      console.error('❌ Error al cargar géneros', err);
     }
   });
 }
+
 
  filtrarPeliculasPorGenero() {
   if (!this.generoSeleccionado) {
