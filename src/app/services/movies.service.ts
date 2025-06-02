@@ -14,8 +14,8 @@ export class MoviesService {
   private popularesUrl = `${environment.supabaseFnUrl}/get-populares`;
   private detallesUrl = `${environment.supabaseFnUrl}/get-movie-details`;
   private actoresUrl  = `${environment.supabaseFnUrl}/get-actores`;
-  private baseUrl = `${environment.supabaseFnUrl}/get-movies-by-genre`;
-  private genresUrl = `${environment.supabaseFnUrl}/get-genres`;
+  private baseUrl = `${environment.supabaseFnUrl}/get-pelicula-genero`;
+  private genresUrl = `${environment.supabaseFnUrl}/get-genero`;
 
 
   constructor(private http: HttpClient) {
