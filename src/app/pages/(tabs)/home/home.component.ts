@@ -93,37 +93,54 @@ export class HomeComponent implements OnInit, AfterViewInit {
     return this.favoritos.includes(id);
   }
 
-  async agregarAFavoritos(pelicula: any) {
-    if (!this.usuarioId) return;
+async agregarAFavoritos(pelicula: any) {
+  if (!this.usuarioId) return;
 
-    const id = pelicula.id;
-    if (this.esFavorita(id)) {
-      alert('Ya tienes esta película en favoritos.');
-      return;
-    }
-
-    const { error } = await this.supabaseService.client
-      .from('favoritos')
-      .insert({
-        usuario_id: this.usuarioId,
-        tmdb_id: id,
-        titulo: pelicula.title,
-        poster_path: pelicula.poster_path,
-        fecha_lanzamiento: pelicula.release_date
-      });
-
-    if (error) {
-      if (error.code === '23505') {
-        console.warn('Película ya en favoritos (conflicto).');
-        this.favoritos.push(id);
-      } else {
-        console.error('Error al guardar favorito', error);
-        alert('No se pudo agregar a favoritos');
-      }
-    } else {
-      this.favoritos.push(id);
-    }
+  const tmdbId = pelicula.id;
+  if (this.esFavorita(tmdbId)) {
+    alert('Ya tienes esta película en favoritos.');
+    return;
   }
+
+  // 1. Insertar o actualizar en la tabla 'peliculas'
+  const peliculaInsert = {
+    tmdb_id: tmdbId,
+    titulo: pelicula.title,
+    poster_path: pelicula.poster_path,
+    fecha_lanzamiento: pelicula.release_date
+  };
+
+  const { error: errorPelicula } = await this.supabaseService.client
+    .from('peliculas')
+    .upsert(peliculaInsert, { onConflict: 'tmdb_id' });
+
+  if (errorPelicula) {
+    console.error('❌ Error al guardar la película:', errorPelicula);
+    alert('No se pudo guardar la película.');
+    return;
+  }
+
+  // 2. Insertar en la tabla 'favoritos'
+  const { error: errorFavorito } = await this.supabaseService.client
+    .from('favoritos')
+    .insert({
+      usuario_id: this.usuarioId,
+      tmdb_id: tmdbId
+    });
+
+  if (errorFavorito) {
+    if (errorFavorito.code === '23505') {
+      console.warn('⚠️ Película ya en favoritos (conflicto).');
+      this.favoritos.push(tmdbId);
+    } else {
+      console.error('❌ Error al guardar favorito:', errorFavorito);
+      alert('No se pudo agregar a favoritos');
+    }
+  } else {
+    this.favoritos.push(tmdbId);
+  }
+}
+
 
   // ----------- FILTRO POR GÉNERO -------------
 
