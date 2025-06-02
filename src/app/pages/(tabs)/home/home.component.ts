@@ -1,6 +1,8 @@
 import { Component, OnInit, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 import { MoviesService } from '../../../services/movies.service';
 import { SupabaseService } from '../../../services/supabase.service';
@@ -9,7 +11,7 @@ import { Movie } from '../../../models/movie.model';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
@@ -21,17 +23,25 @@ export class HomeComponent implements OnInit, AfterViewInit {
   favoritos: number[] = [];
   usuarioId: string | null = null;
 
+  // Géneros
+  generos: any[] = [];
+  generosFiltrados: any[] = [];
+  filtroGenero: string = '';
+  generoSeleccionado: string = '';
+
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
 
   constructor(
     private moviesService: MoviesService,
-    private supabaseService: SupabaseService
+    private supabaseService: SupabaseService,
+    private http: HttpClient
   ) { }
 
   async ngOnInit() {
     await this.obtenerUsuarioId();
     await this.cargarFavoritos();
     this.cargarPeliculas();
+    this.cargarGeneros();
   }
 
   ngAfterViewInit() {
@@ -115,6 +125,44 @@ export class HomeComponent implements OnInit, AfterViewInit {
     }
   }
 
+  // ----------- FILTRO POR GÉNERO -------------
+
+  cargarGeneros() {
+    const url = `https://api.themoviedb.org/3/genre/movie/list?api_key=${this.moviesService['apiKey']}&language=es-ES`;
+
+    this.http.get<any>(url).subscribe({
+      next: (res) => {
+        this.generos = res.genres;
+        this.generosFiltrados = res.genres;
+      },
+      error: (err) => {
+        console.error('Error al cargar géneros', err);
+      }
+    });
+  }
+
+  filtrarPeliculasPorGenero() {
+    if (!this.generoSeleccionado) {
+      this.cargarPeliculas();
+      return;
+    }
+
+    this.cargando = true;
+    const url = `https://api.themoviedb.org/3/discover/movie?api_key=${this.moviesService['apiKey']}&language=es-ES&with_genres=${this.generoSeleccionado}`;
+
+    this.http.get<any>(url).subscribe({
+      next: (res) => {
+        this.peliculasPopulares = res.results;
+        this.cargando = false;
+      },
+      error: (err) => {
+        console.error('Error al filtrar por género', err);
+        this.cargando = false;
+      }
+    });
+  }
+
+  // --------- SCROLL INTERACTIVO ---------
   activarScrollConArrastre(element: HTMLElement) {
     let isDown = false;
     let startX: number;

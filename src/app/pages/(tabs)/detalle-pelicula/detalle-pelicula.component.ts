@@ -6,7 +6,6 @@ import { RouterModule } from '@angular/router';
 import { MoviesService } from '../../../services/movies.service';
 import { SupabaseService } from '../../../services/supabase.service';
 import { Movie } from '../../../models/movie.model';
-import { HttpClient } from '@angular/common/http';
 
 import { FormsModule } from '@angular/forms';
 

@@ -52,5 +52,9 @@ export const routes: Routes = [
   path: 'forgot-password',
   loadComponent: () =>
     import('./pages/auth/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent)
-}
+ },
+  {
+    path: 'ranking',
+    loadComponent: () => import('./pages/(tabs)/ranking/ranking.component').then(m => m.RankingComponent)
+  }
 ];

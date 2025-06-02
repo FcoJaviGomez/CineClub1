@@ -2,6 +2,18 @@
 
 <body class="body" *ngIf="!cargando && peliculasActuales.length && peliculasPopulares.length">
 
+  <!-- Filtro de géneros -->
+  <div class="genero-buscador">
+    <label for="genero">Filtrar por género:</label>
+
+    <select [(ngModel)]="generoSeleccionado" (change)="filtrarPeliculasPorGenero()">
+      <option value="">Todos</option>
+      <option *ngFor="let genero of generosFiltrados" [value]="genero.id">
+        {{ genero.name }}
+      </option>
+    </select>
+  </div>
+
   <!-- Sección de películas populares -->
   <div class="populares">
     <div class="populares_texto">POPULARES</div>
@@ -9,7 +21,7 @@
       <a *ngFor="let peliculaPopular of peliculasPopulares" [routerLink]="['/detalle-pelicula', peliculaPopular.id]">
         <div class="populares_card">
           <img *ngIf="peliculaPopular.poster_path"
-            [src]="'https://image.tmdb.org/t/p/w500' + peliculaPopular.poster_path" alt="{{ peliculaPopular.title }}"
+            [src]="'https://image.tmdb.org/t/p/w500' + peliculaPopular.poster_path" [alt]="peliculaPopular.title"
             class="populares_imagen">
         </div>
       </a>
@@ -21,17 +33,14 @@
     <div class="cartelera_texto">CARTELERA</div>
     <section class="cartelera_peliculas">
       <div *ngFor="let peliculaActual of peliculasActuales" class="cartelera_card">
-
         <a [routerLink]="['/detalle-pelicula', peliculaActual.id]" class="card-link">
           <img *ngIf="peliculaActual.poster_path" [src]="'https://image.tmdb.org/t/p/w500' + peliculaActual.poster_path"
             alt="{{ peliculaActual.title }}" class="cartelera_imagen">
           <div class="cartelera_titulo">{{ peliculaActual.title }}</div>
         </a>
-
         <button class="favorito-corazon" (click)="agregarAFavoritos(peliculaActual)">
           <i class="fa-solid fa-heart icono-favorito" [ngClass]="{ 'favorito': esFavorita(peliculaActual.id) }"></i>
         </button>
-
       </div>
     </section>
   </div>

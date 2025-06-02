@@ -300,6 +300,12 @@
   background-color: var(--negro);
 }
 
+.ya-reseñado {
+  text-align: center;
+  margin-top: 10px;
+  color: var(--marron);
+  font-style: italic;
+}
 
 
 @keyframes spin {

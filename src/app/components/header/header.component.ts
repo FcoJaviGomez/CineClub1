@@ -68,6 +68,10 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/admin/usuarios']);
   }
 
+  verRanking(): void {
+    this.router.navigate(['/ranking']);
+  }
+
   cerrarSesion(): void {
     localStorage.removeItem('token');
     sessionStorage.clear();

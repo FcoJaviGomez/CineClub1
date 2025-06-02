@@ -17,6 +17,7 @@
     background-color: #7b4911b7;
     padding: 10px;
     border-radius: 10px;
+    text-align: center
 }
 
 .populares_texto {
@@ -162,4 +163,22 @@
 .favorito-corazon:hover {
     transform: scale(1.2);
     color: #e74c3c;
+}
+
+.genero-buscador {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.genero-buscador input,
+.genero-buscador select {
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid #aaa;
+    font-size: 14px;
 }

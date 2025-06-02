@@ -14,6 +14,9 @@ export class MoviesService {
   private popularesUrl = `${environment.supabaseFnUrl}/get-populares`;
   private detallesUrl = `${environment.supabaseFnUrl}/get-movie-details`;
   private actoresUrl  = `${environment.supabaseFnUrl}/get-actores`;
+  private baseUrl = `${environment.supabaseFnUrl}/get-movies-by-genre`;
+  private genresUrl = `${environment.supabaseFnUrl}/get-genres`;
+
 
   constructor(private http: HttpClient) {
     this.supabase = createClient(environment.supabaseUrl, environment.supabaseAnonKey);
@@ -67,4 +70,31 @@ export class MoviesService {
       )
     );
   }
+
+  getGenres(): Observable<any> {
+    return from(this.crearCabeceraAutorizada()).pipe(
+      switchMap(headers =>
+        this.http.get<any>(this.genresUrl, { headers }).pipe(
+          catchError(error => {
+            console.error('Error al obtener géneros', error);
+            return throwError(() => new Error('Error al obtener géneros'));
+          })
+        )
+      )
+    );
+  }
+
+  getMoviesByGenre(genreId: string): Observable<any> {
+    return from(this.crearCabeceraAutorizada()).pipe(
+      switchMap(headers =>
+        this.http.post<any>(this.baseUrl, { genreId }, { headers }).pipe(
+          catchError(error => {
+            console.error('Error al obtener películas por género', error);
+            return throwError(() => new Error('Error al obtener películas por género'));
+          })
+        )
+      )
+    );
+  }
+
 }
