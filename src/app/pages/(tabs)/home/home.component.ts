@@ -127,40 +127,36 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   // ----------- FILTRO POR GÉNERO -------------
 
-  cargarGeneros() {
-    const url = `https://api.themoviedb.org/3/genre/movie/list?api_key=${this.moviesService['apiKey']}&language=es-ES`;
-
-    this.http.get<any>(url).subscribe({
-      next: (res) => {
-        this.generos = res.genres;
-        this.generosFiltrados = res.genres;
-      },
-      error: (err) => {
-        console.error('Error al cargar géneros', err);
-      }
-    });
-  }
-
-  filtrarPeliculasPorGenero() {
-    if (!this.generoSeleccionado) {
-      this.cargarPeliculas();
-      return;
+cargarGeneros() {
+  this.moviesService.getGenres().subscribe({
+    next: (res) => {
+      this.generos = res.genres;
+      this.generosFiltrados = res.genres;
+    },
+    error: (err) => {
+      console.error('Error al cargar géneros', err);
     }
+  });
+}
 
-    this.cargando = true;
-    const url = `https://api.themoviedb.org/3/discover/movie?api_key=${this.moviesService['apiKey']}&language=es-ES&with_genres=${this.generoSeleccionado}`;
-
-    this.http.get<any>(url).subscribe({
-      next: (res) => {
-        this.peliculasPopulares = res.results;
-        this.cargando = false;
-      },
-      error: (err) => {
-        console.error('Error al filtrar por género', err);
-        this.cargando = false;
-      }
-    });
+ filtrarPeliculasPorGenero() {
+  if (!this.generoSeleccionado) {
+    this.cargarPeliculas();
+    return;
   }
+
+  this.cargando = true;
+  this.moviesService.getMoviesByGenre(this.generoSeleccionado).subscribe({
+    next: (res) => {
+      this.peliculasPopulares = res.results;
+      this.cargando = false;
+    },
+    error: (err) => {
+      console.error('Error al filtrar por género', err);
+      this.cargando = false;
+    }
+  });
+}
 
   // --------- SCROLL INTERACTIVO ---------
   activarScrollConArrastre(element: HTMLElement) {
