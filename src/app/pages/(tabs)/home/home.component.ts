@@ -65,15 +65,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   async obtenerUsuarioId() {
     const { data: { user } } = await this.supabaseService.getUser();
-    if (!user) return;
-
-    const { data: perfil } = await this.supabaseService.client
-      .from('usuarios')
-      .select('id')
-      .eq('email', user.email)
-      .maybeSingle();
-
-    this.usuarioId = perfil?.id || null;
+    this.usuarioId = user?.id || null;
   }
 
   async cargarFavoritos() {
@@ -97,12 +89,14 @@ async agregarAFavoritos(pelicula: any) {
   if (!this.usuarioId) return;
 
   const tmdbId = pelicula.id;
+
+  // 1. Verifica si ya es favorita
   if (this.esFavorita(tmdbId)) {
     alert('Ya tienes esta película en favoritos.');
     return;
   }
 
-  // 1. Insertar o actualizar en la tabla 'peliculas'
+  // 2. Inserta o actualiza en la tabla 'peliculas' usando tmdb_id como clave única
   const peliculaInsert = {
     tmdb_id: tmdbId,
     titulo: pelicula.title,
@@ -120,26 +114,41 @@ async agregarAFavoritos(pelicula: any) {
     return;
   }
 
-  // 2. Insertar en la tabla 'favoritos'
+  // 3. Obtener el ID (uuid) real de la película recién insertada
+  const { data: peliculaData, error: errorSelect } = await this.supabaseService.client
+    .from('peliculas')
+    .select('id')
+    .eq('tmdb_id', tmdbId)
+    .maybeSingle();
+
+  if (errorSelect || !peliculaData) {
+    console.error('❌ Error al obtener el ID de la película:', errorSelect);
+    alert('No se pudo recuperar la película para agregar a favoritos.');
+    return;
+  }
+
+  // 4. Insertar en la tabla 'favoritos'
   const { error: errorFavorito } = await this.supabaseService.client
     .from('favoritos')
     .insert({
       usuario_id: this.usuarioId,
-      tmdb_id: tmdbId
+      pelicula_id: peliculaData.id
     });
 
   if (errorFavorito) {
     if (errorFavorito.code === '23505') {
       console.warn('⚠️ Película ya en favoritos (conflicto).');
-      this.favoritos.push(tmdbId);
     } else {
       console.error('❌ Error al guardar favorito:', errorFavorito);
       alert('No se pudo agregar a favoritos');
+      return;
     }
-  } else {
-    this.favoritos.push(tmdbId);
   }
+
+  // 5. Agrega a la lista local de favoritos por tmdb_id
+  this.favoritos.push(tmdbId);
 }
+
 
 
   // ----------- FILTRO POR GÉNERO -------------
