@@ -1,7 +1,19 @@
+body {
+    min-height: 78vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 30px 15px;
+    background-color: var(--fondo);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 .ranking-body {
     width: 100%;
     max-width: 960px;
-    margin: 40px auto;
+    /* margin: 40px auto; */
     padding: 20px;
     background: var(--amarillo);
     border-radius: 15px;
@@ -14,7 +26,7 @@
 }
 
 .ranking-title {
-    font-size: 24px;
+    font-size: 18px;
     color: var(--marron);
     margin-bottom: 20px;
 }
@@ -58,8 +70,7 @@
 
 .ranking-img {
     width: 100%;
-    height: 300px;
-    object-fit: cover;
+    height: 240px;
     border-bottom: 1px solid #eee;
 }
 

@@ -1,0 +1,16 @@
+<body>
+    <div class="favoritos-container" *ngIf="favoritas?.length">
+        <h3>Mis Películas Favoritas</h3>
+        <div class="favoritos-grid">
+            <div *ngFor="let peli of favoritas" class="favorito-card">
+                <a [routerLink]="['/detalle-pelicula', peli.tmdb_id]" [queryParams]="{ origen: 'favoritos' }">
+                    <img [src]="'https://image.tmdb.org/t/p/w500' + peli.poster_path" [alt]="peli.titulo"
+                        class="favorito-img" />
+                </a>
+                <button class="eliminar-favorito" (click)="eliminarFavorito(peli.tmdb_id)">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</body>

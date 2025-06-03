@@ -1,25 +1,27 @@
-<div class="ranking-body">
-    <h2 class="ranking-title">Ranking de Películas Mejor Valoradas</h2>
+<body>
+    <div class="ranking-body">
+        <h2 class="ranking-title">Ranking de Películas Mejor Valoradas</h2>
 
-    <div *ngIf="cargando" class="ranking-loading">
-        <p>Cargando ranking...</p>
-    </div>
+        <div *ngIf="cargando" class="ranking-loading">
+            <p>Cargando ranking...</p>
+        </div>
 
-    <div *ngIf="!cargando && rankingPeliculas.length === 0" class="ranking-empty">
-        <p>No hay reseñas aún.</p>
-    </div>
+        <div *ngIf="!cargando && rankingPeliculas.length === 0" class="ranking-empty">
+            <p>No hay reseñas aún.</p>
+        </div>
 
-    <div class="ranking-grid" *ngIf="!cargando && rankingPeliculas.length">
-        <div *ngFor="let peli of rankingPeliculas" class="ranking-card">
-            <a [routerLink]="['/detalle-pelicula', peli.tmdb_id]">
-                <img [src]="'https://image.tmdb.org/t/p/w500' + peli.poster_path" [alt]="peli.titulo"
-                    class="ranking-img" />
-                <div class="ranking-info">
-                    <h4 class="ranking-title">{{ peli.titulo }}</h4>
-                    <p class="ranking-puntaje">⭐ {{ peli.media }} / 5</p>
-                    <p class="ranking-reviews">{{ peli.cantidad }} reseñas</p>
-                </div>
-            </a>
+        <div class="ranking-grid" *ngIf="!cargando && rankingPeliculas.length">
+            <div *ngFor="let peli of rankingPeliculas" class="ranking-card">
+                <a [routerLink]="['/detalle-pelicula', peli.tmdb_id]" [queryParams]="{ origen: 'ranking' }">
+                    <img [src]="'https://image.tmdb.org/t/p/w500' + peli.poster_path" [alt]="peli.titulo"
+                        class="ranking-img" />
+                    <div class="ranking-info">
+                        <h4 class="ranking-title">{{ peli.titulo }}</h4>
+                        <p class="ranking-puntaje">⭐ {{ peli.media }} / 5</p>
+                        <p class="ranking-reviews">{{ peli.cantidad }} reseñas</p>
+                    </div>
+                </a>
+            </div>
         </div>
     </div>
-</div>
+</body>

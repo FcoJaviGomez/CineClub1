@@ -50,7 +50,6 @@ export class SupabaseService {
     return data;
   }
 
-
   async deleteUserById(userId: string) {
     const res = await fetch('https://tcbplmfcfwkjvgrpnjxr.supabase.co/functions/v1/admin-delete-user', {
       method: 'POST',
@@ -68,7 +67,6 @@ export class SupabaseService {
 
     return data;
   }
-
 
   // LOGIN: Inicia sesión y, si el usuario no existe en la tabla 'usuarios', lo inserta
   async login(email: string, password: string): Promise<AuthResponse> {
@@ -180,4 +178,25 @@ export class SupabaseService {
   async getSession() {
     return await this.supabase.auth.getSession();
   }
+
+  // Obtiene el ranking de películas con promedio de puntuación y detalles desde la tabla "peliculas"
+  async obtenerRankingDesdeReseñas() {
+    const { data, error } = await this.supabase
+      .from('reseñas')
+      .select(`
+        pelicula_id,
+        puntuacion,
+        peliculas (
+          titulo,
+          poster_path,
+          tmdb_id
+        )
+      `);
+
+    if (error) throw error;
+
+    return data;
+  }
+
+
 }

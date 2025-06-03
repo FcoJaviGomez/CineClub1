@@ -1,19 +1,35 @@
 <!-- Botón de volver según origen o por defecto -->
 <div class="volver-fijo">
-  <a [routerLink]="origen === 'perfil' ? '/perfil' : '/home'" class="volver-fijo-link">
+  <a
+    [routerLink]="
+      origen === 'ranking' ? '/ranking' :
+      origen === 'favoritos' ? '/favoritos' :
+      '/home'
+    "
+    class="volver-fijo-link"
+  >
     <i class="fa-solid fa-arrow-left"></i>
     {{
-    origen === 'perfil'
-    ? 'Volver a perfil'
-    : 'Volver al inicio'
+      origen === 'ranking'
+        ? 'Volver al ranking' :
+      origen === 'favoritos'
+        ? 'Volver a favoritos' :
+      'Volver al inicio'
     }}
   </a>
 </div>
+
 
 <!-- Contenido principal -->
 <div class="body" *ngIf="infoPelicula && actores">
   <div class="detalle-card">
     <div class="detalle-imagen">
+      <button class="favorito-corazon" (click)="agregarAFavoritos(infoPelicula)">
+        <i class="fa-solid fa-heart icono-favorito" [ngClass]="{ 'favorito': esFavorita(infoPelicula.id) }"></i>
+      </button>
+      <button *ngIf="esFavorita(infoPelicula.id)" class="eliminar-favorito" (click)="eliminarDeFavoritos(infoPelicula.id)">
+        <i class="fa-solid fa-trash icono-eliminar"></i>
+      </button>
       <img [src]="'https://image.tmdb.org/t/p/w500' + infoPelicula.poster_path" class="img-pelicula"
         alt="{{ infoPelicula.title }}" />
     </div>

@@ -68,14 +68,16 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/admin/usuarios']);
   }
 
+  verFavoritos(): void {
+    this.router.navigate(['/favoritos']);
+  }
+
   verRanking(): void {
     this.router.navigate(['/ranking']);
   }
 
-  cerrarSesion(): void {
-    localStorage.removeItem('token');
-    sessionStorage.clear();
-    this.router.navigate(['/login']);
+  verComunidad(): void {
+    this.router.navigate(['/comunidad']);
   }
 
   toggleMenu(): void {

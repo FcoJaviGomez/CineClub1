@@ -1,21 +1,27 @@
 <header class="header">
-    <a class="header_div" (click)="irHome()">
-        <div class="icono"><i class="fa-solid fa-ticket"></i></div>
-        <div class="titulo">CineCLUB</div>
-    </a>
+  <a class="header_div" (click)="irHome()">
+    <div class="icono"><i class="fa-solid fa-ticket"></i></div>
+    <div class="titulo">CineCLUB</div>
+  </a>
 
-    <div class="acciones-header">
-        <button class="ranking-boton" (click)="verRanking()">
-            <i class="fa-solid fa-ranking-star"></i> Ranking
-        </button>
+  <div class="acciones-header">
+    <button (click)="verComunidad()">
+      <i class="fa-solid fa-users"></i> <span class="texto-header">Comunidad</span>
+    </button>
+    <button (click)="verFavoritos()">
+      <i class="fa-solid fa-heart"></i> <span class="texto-header">Favoritos</span>
+    </button>
+    <button (click)="verRanking()">
+      <i class="fa-solid fa-ranking-star"></i> <span class="texto-header">Ranking</span>
+    </button>
 
-        <button *ngIf="esAdmin" class="admin-boton" (click)="gestionarUsuarios()">
-            <i class="fa-solid fa-users-gear"></i> Gestionar usuarios
-        </button>
+    <button *ngIf="esAdmin" (click)="gestionarUsuarios()">
+      <i class="fa-solid fa-users-gear"></i> <span class="texto-header">Gestionar usuarios</span>
+    </button>
 
-        <div class="perfil-menu" (click)="verPerfil()">
-            <img [src]="imagenPerfil" alt="Foto perfil" class="avatar" />
-            <span>{{ nombreUsuario }}</span>
-        </div>
-    </div>
+    <button (click)="verPerfil()">
+      <img [src]="imagenPerfil" alt="Foto perfil" class="avatar" />
+      <span class="texto-header">{{ nombreUsuario }}</span>
+    </button>
+  </div>
 </header>

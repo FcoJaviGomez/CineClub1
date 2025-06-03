@@ -22,6 +22,9 @@ export class DetallePeliculaComponent implements OnInit {
   actores: any[] = [];
   cargando = true;
 
+  favoritos: number[] = [];
+  usuarioId: string | null = null;
+
   origen: string = '';
 
   // Reseñas
@@ -51,6 +54,105 @@ export class DetallePeliculaComponent implements OnInit {
     }
   }
 
+  async agregarAFavoritos(pelicula: any) {
+    if (!this.usuarioId) return;
+
+    const tmdbId = pelicula.id;
+
+    // 1. Verifica si ya es favorita
+    if (this.esFavorita(tmdbId)) {
+      alert('Ya tienes esta película en favoritos.');
+      return;
+    }
+
+    // 2. Inserta o actualiza en la tabla 'peliculas' usando tmdb_id como clave única
+    const peliculaInsert = {
+      tmdb_id: tmdbId,
+      titulo: pelicula.title || 'Sin título',
+      poster_path: pelicula.poster_path || '',
+      fecha_lanzamiento: pelicula.release_date || null
+    };
+
+
+    const { error: errorPelicula } = await this.supabaseService.client
+      .from('peliculas')
+      .upsert(peliculaInsert, { onConflict: 'tmdb_id' });
+
+    if (errorPelicula) {
+      console.error('❌ Error al guardar la película:', errorPelicula);
+      alert('No se pudo guardar la película.');
+      return;
+    }
+
+    // 3. Obtener el ID (uuid) real de la película recién insertada
+    const { data: peliculaData, error: errorSelect } = await this.supabaseService.client
+      .from('peliculas')
+      .select('id')
+      .eq('tmdb_id', tmdbId)
+      .maybeSingle();
+
+    if (errorSelect || !peliculaData) {
+      console.error('❌ Error al obtener el ID de la película:', errorSelect);
+      alert('No se pudo recuperar la película para agregar a favoritos.');
+      return;
+    }
+
+    // 4. Insertar en la tabla 'favoritos'
+    const { error: errorFavorito } = await this.supabaseService.client
+      .from('favoritos')
+      .insert({
+        usuario_id: this.usuarioId,
+        pelicula_id: peliculaData.id
+      });
+
+    if (errorFavorito) {
+      if (errorFavorito.code === '23505') {
+        console.warn('⚠️ Película ya en favoritos (conflicto).');
+      } else {
+        console.error('❌ Error al guardar favorito:', errorFavorito);
+        alert('No se pudo agregar a favoritos');
+        return;
+      }
+    }
+
+    // 5. Agrega a la lista local de favoritos por tmdb_id
+    this.favoritos.push(tmdbId);
+  }
+
+   esFavorita(id: number): boolean {
+    return this.favoritos.includes(id);
+  }
+
+  async eliminarDeFavoritos(tmdbId: number) {
+    const confirmado = window.confirm('¿Estás seguro de que deseas eliminar esta película de tus favoritos?');
+    if (!confirmado) return;
+
+    if (!this.usuarioId) return;
+
+    const { data: pelicula } = await this.supabaseService.client
+      .from('peliculas')
+      .select('id')
+      .eq('tmdb_id', tmdbId)
+      .maybeSingle();
+
+    if (!pelicula) return;
+
+    const { error } = await this.supabaseService.client
+      .from('favoritos')
+      .delete()
+      .match({
+        usuario_id: this.usuarioId,
+        pelicula_id: pelicula.id
+      });
+
+    if (!error) {
+      this.favoritos = this.favoritos.filter(id => id !== tmdbId);
+    } else {
+      console.error('Error al eliminar de favoritos:', error);
+      alert('No se pudo eliminar de favoritos.');
+    }
+  }
+  
   cargarDetalles(id: string) {
     this.moviesService.getMovieDetails(id).subscribe({
       next: (data) => {
@@ -123,6 +225,7 @@ export class DetallePeliculaComponent implements OnInit {
     const { data: { user } } = await this.supabaseService.getUser();
     if (!user) return;
 
+    // Buscar perfil del usuario
     const { data: perfil } = await this.supabaseService.client
       .from('usuarios')
       .select('id')
@@ -131,9 +234,23 @@ export class DetallePeliculaComponent implements OnInit {
 
     if (!perfil) return;
 
+    // Buscar la película en tu base de datos para obtener el id interno
+    const { data: pelicula } = await this.supabaseService.client
+      .from('peliculas')
+      .select('id')
+      .eq('tmdb_id', tmdb_id)
+      .maybeSingle();
+
+    if (!pelicula) {
+      alert('Película no encontrada en la base de datos');
+      return;
+    }
+
+    // Payload completo incluyendo pelicula_id
     const payload = {
       usuario_id: perfil.id,
       tmdb_id,
+      pelicula_id: pelicula.id,
       comentario: this.nuevoComentario,
       puntuacion: this.nuevaPuntuacion
     };
@@ -152,4 +269,5 @@ export class DetallePeliculaComponent implements OnInit {
       alert('No se pudo guardar la reseña');
     }
   }
+
 }
