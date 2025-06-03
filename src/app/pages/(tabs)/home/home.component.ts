@@ -66,6 +66,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   async obtenerUsuarioId() {
     const { data: { user } } = await this.supabaseService.getUser();
     this.usuarioId = user?.id || null;
+    console.log('UID:', user?.id); // ¿Esto devuelve algo válido?
   }
 
   async cargarFavoritos() {
