@@ -47,6 +47,7 @@ export class DetallePeliculaComponent implements OnInit {
 
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
+      this.cargarFavoritosDelUsuario();
       this.cargarDetalles(id);
       this.cargarActores(id);
       this.cargarResenas(+id);
@@ -121,6 +122,30 @@ export class DetallePeliculaComponent implements OnInit {
 
    esFavorita(id: number): boolean {
     return this.favoritos.includes(id);
+  }
+
+  async cargarFavoritosDelUsuario() {
+    const { data: { user }, error: userError } = await this.supabaseService.getUser();
+    if (!user || userError) return;
+
+    const { data: perfil } = await this.supabaseService.client
+      .from('usuarios')
+      .select('id')
+      .eq('email', user.email)
+      .maybeSingle();
+
+    if (!perfil) return;
+    this.usuarioId = perfil.id;
+
+    // Hacemos join con la tabla de películas
+    const { data: favoritos } = await this.supabaseService.client
+      .from('favoritos')
+      .select('peliculas!inner ( tmdb_id )') // forzamos el join
+      .eq('usuario_id', perfil.id);
+
+    this.favoritos = (favoritos || [])
+      .map((f: any) => f.peliculas?.tmdb_id)
+      .filter((id: any) => !!id);
   }
 
   async eliminarDeFavoritos(tmdbId: number) {

@@ -23,17 +23,15 @@ export class MoviesService {
   }
 
   // Agrega token a la cabecera
-private async crearCabeceraAutorizada(): Promise<HttpHeaders> {
-  const { data } = await this.supabase.auth.getSession();
-  const token = data.session?.access_token || '';
+  private async crearCabeceraAutorizada(): Promise<HttpHeaders> {
+    const { data } = await this.supabase.auth.getSession();
+    const token = data.session?.access_token || '';
 
-  console.log('🔐 Token generado para headers:', token); // log para depurar
-
-  return new HttpHeaders({ 
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json'
-  });
-}
+    return new HttpHeaders({ 
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+  }
 
 
   // POPULARES
