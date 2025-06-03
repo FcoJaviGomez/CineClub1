@@ -66,7 +66,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
   async obtenerUsuarioId() {
     const { data: { user } } = await this.supabaseService.getUser();
     this.usuarioId = user?.id || null;
-    console.log('UID:', user?.id); // ¿Esto devuelve algo válido?
   }
 
   async cargarFavoritos() {
@@ -74,12 +73,17 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     const { data, error } = await this.supabaseService.client
       .from('favoritos')
-      .select('tmdb_id')
+      .select('peliculas(tmdb_id)')
       .eq('usuario_id', this.usuarioId);
 
-    if (!error && data) {
-      this.favoritos = data.map(f => f.tmdb_id);
+    if (error) {
+      console.error('❌ Error al cargar favoritos:', error);
+      return;
     }
+
+    this.favoritos = data
+      .map((f: any) => f.peliculas?.tmdb_id)
+      .filter((id: number | null) => id !== null);
   }
 
   esFavorita(id: number): boolean {
@@ -100,10 +104,11 @@ async agregarAFavoritos(pelicula: any) {
   // 2. Inserta o actualiza en la tabla 'peliculas' usando tmdb_id como clave única
   const peliculaInsert = {
     tmdb_id: tmdbId,
-    titulo: pelicula.title,
-    poster_path: pelicula.poster_path,
-    fecha_lanzamiento: pelicula.release_date
+    titulo: pelicula.title || 'Sin título',
+    poster_path: pelicula.poster_path || '',
+    fecha_lanzamiento: pelicula.release_date || null
   };
+
 
   const { error: errorPelicula } = await this.supabaseService.client
     .from('peliculas')
