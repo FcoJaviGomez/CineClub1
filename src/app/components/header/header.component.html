@@ -8,11 +8,18 @@
     <button (click)="verComunidad()">
       <i class="fa-solid fa-users"></i> <span class="texto-header">Comunidad</span>
     </button>
+
     <button (click)="verFavoritos()">
       <i class="fa-solid fa-heart"></i> <span class="texto-header">Favoritos</span>
     </button>
+
     <button (click)="verRanking()">
       <i class="fa-solid fa-ranking-star"></i> <span class="texto-header">Ranking</span>
+    </button>
+
+    <!-- ✅ Nuevo botón de JUEGO -->
+    <button (click)="verJuego()">
+      <i class="fa-solid fa-gamepad"></i> <span class="texto-header">Juego</span>
     </button>
 
     <button *ngIf="esAdmin" (click)="gestionarUsuarios()">

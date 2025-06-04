@@ -13,7 +13,7 @@ export const routes: Routes = [
     path: 'registro',
     loadComponent: () =>
       import('./pages/auth/register/register.component').then(m => m.RegisterComponent)
-  },
+  },	
   {
     path: 'home',
     canActivate: [authGuard],
@@ -44,22 +44,31 @@ export const routes: Routes = [
       import('./pages/(tabs)/admin/usuarios.component').then(m => m.UsuariosComponent)
   },
   {
-  path: 'reset-password',
-  loadComponent: () =>
-    import('./pages/auth/reset-password/reset-password.component').then(m => m.ResetPasswordComponent)
+    path: 'reset-password',
+    loadComponent: () =>
+      import('./pages/auth/reset-password/reset-password.component').then(m => m.ResetPasswordComponent)
   },
   {
-  path: 'forgot-password',
-  loadComponent: () =>
-    import('./pages/auth/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent)
+    path: 'forgot-password',
+    loadComponent: () =>
+      import('./pages/auth/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent)
   },
   {
     path: 'ranking',
     loadComponent: () => import('./pages/(tabs)/ranking/ranking.component').then(m => m.RankingComponent)
   },
   {
-  path: 'favoritos',
-  loadComponent: () => import('./pages/(tabs)/favoritos/favoritos.component').then(m => m.FavoritosComponent)
+    path: 'favoritos',
+    loadComponent: () => import('./pages/(tabs)/favoritos/favoritos.component').then(m => m.FavoritosComponent)
+  },
+  {
+    path: 'comunidad',
+    loadComponent: () =>
+      import('./pages/(tabs)/comunidad/comunidad.component').then(m => m.ComunidadComponent)
+  },
+  {
+    path: 'juego',
+    loadComponent: () =>
+      import('./pages/(tabs)/juego/juego.component').then(m => m.JuegoComponent)
   }
-
 ];

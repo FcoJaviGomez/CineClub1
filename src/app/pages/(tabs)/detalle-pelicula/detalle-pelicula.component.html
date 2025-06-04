@@ -1,35 +1,39 @@
 <!-- Botón de volver según origen o por defecto -->
 <div class="volver-fijo">
-  <a
-    [routerLink]="
+  <a [routerLink]="
       origen === 'ranking' ? '/ranking' :
       origen === 'favoritos' ? '/favoritos' :
       '/home'
-    "
-    class="volver-fijo-link"
-  >
+    " class="volver-fijo-link">
     <i class="fa-solid fa-arrow-left"></i>
     {{
-      origen === 'ranking'
-        ? 'Volver al ranking' :
-      origen === 'favoritos'
-        ? 'Volver a favoritos' :
-      'Volver al inicio'
+    origen === 'ranking'
+    ? 'Volver al ranking' :
+    origen === 'favoritos'
+    ? 'Volver a favoritos' :
+    'Volver al inicio'
     }}
   </a>
 </div>
-
 
 <!-- Contenido principal -->
 <div class="body" *ngIf="infoPelicula && actores">
   <div class="detalle-card">
     <div class="detalle-imagen">
+      <!-- BOTÓN TRAILER -->
+      <button class="btn-trailer" (click)="abrirTrailer()">
+        <i class="fa-solid fa-play"></i>
+      </button>
+
+      <!-- Botones de favorito -->
       <button class="favorito-corazon" (click)="agregarAFavoritos(infoPelicula)">
         <i class="fa-solid fa-heart icono-favorito" [ngClass]="{ 'favorito': esFavorita(infoPelicula.id) }"></i>
       </button>
-      <button *ngIf="esFavorita(infoPelicula.id)" class="eliminar-favorito" (click)="eliminarDeFavoritos(infoPelicula.id)">
+      <button *ngIf="esFavorita(infoPelicula.id)" class="eliminar-favorito"
+        (click)="eliminarDeFavoritos(infoPelicula.id)">
         <i class="fa-solid fa-trash icono-eliminar"></i>
       </button>
+
       <img [src]="'https://image.tmdb.org/t/p/w500' + infoPelicula.poster_path" class="img-pelicula"
         alt="{{ infoPelicula.title }}" />
     </div>
@@ -73,7 +77,6 @@
         Puntuación media: {{ puntuacionMedia }} ⭐
       </p>
 
-
       <div *ngFor="let r of resenas" class="resena">
         <p><strong>{{ r.puntuacion }} estrellas</strong></p>
         <p>{{ r.comentario }}</p>
@@ -85,8 +88,7 @@
       <p>Esta película aún no tiene reseñas.</p>
     </ng-template>
 
-    <!-- Formulario para reseñar -->
-    <!-- Formulario para reseñar -->
+    <!-- Formulario de reseña -->
     <form *ngIf="infoPelicula && !miResena" (ngSubmit)="enviarResena(infoPelicula.id)">
       <h4>Escribe tu reseña</h4>
 
@@ -103,11 +105,9 @@
       <button type="submit">Enviar reseña</button>
     </form>
 
-    <!-- Mensaje si ya tiene reseña -->
     <div *ngIf="miResena" class="ya-reseñado">
       <p>Ya has enviado una reseña para esta película.</p>
     </div>
-
   </div>
 </div>
 
@@ -116,5 +116,21 @@
   <div class="loading">
     <div class="spinner"></div>
     <p>Cargando...</p>
+  </div>
+</div>
+
+<!-- MODAL TRAILER -->
+<div class="modal-trailer" *ngIf="mostrarTrailer" (click)="cerrarTrailer()">
+  <div class="modal-contenido" (click)="$event.stopPropagation()">
+
+    <iframe *ngIf="trailerUrl" [src]="trailerUrl | safeUrl" frameborder="0" allowfullscreen allow="autoplay"></iframe>
+
+    <!-- Fallback visual -->
+    <div *ngIf="!trailerUrl" class="fallback-trailer">
+      <img src="assets/no-trailer.png" alt="Tráiler no disponible" />
+      <p>No hay tráiler disponible para esta película.</p>
+    </div>
+
+    <button class="cerrar-modal" (click)="cerrarTrailer()">✖</button>
   </div>
 </div>

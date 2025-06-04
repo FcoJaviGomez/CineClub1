@@ -80,6 +80,11 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/comunidad']);
   }
 
+  verJuego() {
+    this.router.navigate(['/juego']);
+  }
+
+
   toggleMenu(): void {
     this.menuAbierto = !this.menuAbierto;
   }

@@ -2,17 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-
+import { SafeUrlPipe } from '../../../shared/pipes/safe-url.pipe';
 import { MoviesService } from '../../../services/movies.service';
 import { SupabaseService } from '../../../services/supabase.service';
 import { Movie } from '../../../models/movie.model';
 
 import { FormsModule } from '@angular/forms';
 
+
 @Component({
   selector: 'app-detalle-pelicula',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, SafeUrlPipe],
   templateUrl: './detalle-pelicula.component.html',
   styleUrls: ['./detalle-pelicula.component.css']
 })
@@ -120,7 +121,7 @@ export class DetallePeliculaComponent implements OnInit {
     this.favoritos.push(tmdbId);
   }
 
-   esFavorita(id: number): boolean {
+  esFavorita(id: number): boolean {
     return this.favoritos.includes(id);
   }
 
@@ -177,7 +178,7 @@ export class DetallePeliculaComponent implements OnInit {
       alert('No se pudo eliminar de favoritos.');
     }
   }
-  
+
   cargarDetalles(id: string) {
     this.moviesService.getMovieDetails(id).subscribe({
       next: (data) => {
@@ -293,6 +294,69 @@ export class DetallePeliculaComponent implements OnInit {
       console.error('Error al enviar reseña:', error);
       alert('No se pudo guardar la reseña');
     }
+  }
+
+  mostrarTrailer = false;
+  trailerUrl: string | null = null;
+
+  async abrirTrailer() {
+    if (!this.infoPelicula?.id) return;
+
+    try {
+      const { data, error } = await this.supabaseService.client.functions.invoke('rapid-handler', {
+        body: { movie_id: this.infoPelicula.id }
+      });
+
+      if (error) {
+        console.error('❌ Error al invocar rapid-handler:', error);
+        this.trailerUrl = null;
+        this.mostrarTrailer = true;
+        return;
+      }
+
+      const videos = data?.results || [];
+
+      // 1. Tráiler oficial
+      let trailer = videos.find(
+        (v: any) =>
+          v.type === 'Trailer' &&
+          v.site === 'YouTube' &&
+          v.official === true
+      );
+
+      if (!trailer) {
+        console.warn('ℹ️ Tráiler oficial no encontrado. Buscando tráiler no oficial...');
+        trailer = videos.find(
+          (v: any) =>
+            v.type === 'Trailer' &&
+            v.site === 'YouTube'
+        );
+      }
+
+      // 2. Cualquier video de YouTube
+      if (!trailer) {
+        console.warn('⚠️ Ningún tráiler encontrado. Buscando cualquier video de YouTube...');
+        trailer = videos.find((v: any) => v.site === 'YouTube');
+      }
+
+      if (trailer) {
+        this.trailerUrl = `https://www.youtube.com/embed/${trailer.key}?autoplay=1`;
+      } else {
+        console.warn('❌ Ningún video disponible para esta película.');
+        this.trailerUrl = null;
+      }
+
+      this.mostrarTrailer = true;
+    } catch (err) {
+      console.error('❌ Error general en abrirTrailer:', err);
+      this.trailerUrl = null;
+      this.mostrarTrailer = true;
+    }
+  }
+
+  cerrarTrailer() {
+    this.mostrarTrailer = false;
+    this.trailerUrl = null;
   }
 
 }

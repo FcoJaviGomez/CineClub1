@@ -1,0 +1,244 @@
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 80vh;
+    max-width: 800px;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #ffffff;
+}
+
+.mensajes {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background-color: #f9f9f9;
+}
+
+.mensaje-propio,
+.mensaje-ajeno {
+    display: flex;
+    flex-direction: column;
+    max-width: 60%;
+}
+
+.mensaje-propio {
+    align-self: flex-end;
+    align-items: flex-end;
+}
+
+.mensaje-ajeno {
+    align-self: flex-start;
+    align-items: flex-start;
+}
+
+.info-usuario {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    margin-bottom: 4px;
+    color: #444;
+}
+
+.avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.nombre {
+    font-weight: bold;
+}
+
+.burbuja {
+    position: relative;
+    padding: 10px 14px;
+    border-radius: 16px;
+    font-size: 14px;
+    background-color: #e0e0e0;
+    word-break: break-word;
+}
+
+.mensaje-propio .burbuja {
+    background-color: #ffb84c;
+}
+
+.hora {
+    font-size: 11px;
+    color: #666;
+    margin-top: 4px;
+    display: block;
+    text-align: right;
+}
+
+.nuevo-mensaje {
+    display: flex;
+    padding: 12px;
+    gap: 10px;
+    border-top: 1px solid #ccc;
+    background-color: #f2f2f2;
+}
+
+.nuevo-mensaje input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 20px;
+    border: 1px solid #bbb;
+    outline: none;
+}
+
+.nuevo-mensaje button {
+    padding: 10px 20px;
+    background-color: #ff9800;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.nuevo-mensaje button:hover {
+    background-color: #e68900;
+}
+
+.fecha-separador {
+    text-align: center;
+    font-size: 13px;
+    color: #666;
+    margin: 12px 0 4px;
+    font-weight: bold;
+}
+
+.respuesta {
+    background: rgba(0, 0, 0, 0.05);
+    padding: 6px 10px;
+    border-left: 4px solid #aaa;
+    border-radius: 6px;
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.respuesta-nombre {
+    font-weight: bold;
+    margin-bottom: 2px;
+    color: #333;
+}
+
+.respuesta-texto {
+    color: #555;
+    font-style: italic;
+}
+
+.respuesta-activa {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #ffeeba;
+    border-top: 1px solid #ccc;
+    padding: 6px 12px;
+    font-size: 13px;
+    color: #333;
+}
+
+.respuesta-activa .info {
+    display: flex;
+    flex-direction: column;
+}
+
+.respuesta-activa .etiqueta {
+    font-weight: bold;
+}
+
+.respuesta-activa button {
+    background: transparent;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* BOTÓN DE RESPUESTA */
+
+.mensaje {
+    position: relative;
+}
+
+.btn-responder {
+    position: absolute;
+    top: 8px;
+    left: -26px;
+    font-size: 14px;
+    background: transparent;
+    border: none;
+    color: #888;
+    display: none;
+    transition: color 0.2s ease;
+}
+
+.mensaje:hover .btn-responder {
+    display: inline-block;
+}
+
+.btn-responder:hover {
+    color: #000;
+}
+
+.menu-container {
+    position: absolute;
+    top: 8px;
+    right: -6px;
+}
+
+.menu-icon {
+    background: transparent;
+    border: none;
+    font-size: 16px;
+    color: #999;
+    cursor: pointer;
+    display: none;
+}
+
+.mensaje:hover .menu-icon {
+    display: inline;
+}
+
+.menu-opciones {
+    position: absolute;
+    top: 24px;
+    right: 0;
+    background: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+    border-radius: 4px;
+}
+
+.menu-opciones button {
+    background: none;
+    border: none;
+    padding: 8px 12px;
+    width: 100%;
+    text-align: left;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.menu-opciones button:hover {
+    background-color: #f0f0f0;
+}
+
+
+/* Mostrar el botón siempre en pantallas pequeñas (opcional) */
+@media (max-width: 768px) {
+    .btn-responder {
+        display: inline-block;
+        left: -18px;
+        font-size: 18px;
+        top: 6px;
+    }
+}

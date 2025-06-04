@@ -1,0 +1,103 @@
+.juego-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    min-height: 100vh;
+    background: linear-gradient(to bottom, #111, #222);
+    color: #fff;
+    text-align: center;
+}
+
+.juego-activo,
+.juego-fin {
+    max-width: 800px;
+    width: 100%;
+}
+
+.card {
+    background: #333;
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 16px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+}
+
+.card img {
+    max-width: 100%;
+    border-radius: 12px;
+}
+
+.versus {
+    font-size: 2rem;
+    margin: 1rem 0;
+}
+
+.botones {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin: 1.5rem 0;
+}
+
+.btn {
+    font-size: 1.2rem;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    color: white;
+    transition: background 0.2s ease;
+}
+
+.btn.mayor {
+    background: #28a745;
+}
+
+.btn.mayor:hover {
+    background: #218838;
+}
+
+.btn.menor {
+    background: #dc3545;
+}
+
+.btn.menor:hover {
+    background: #c82333;
+}
+
+.score {
+    font-size: 1.2rem;
+    margin-top: 1rem;
+}
+
+.ranking {
+    margin-top: 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1rem;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 500px;
+}
+
+.ranking ol {
+    padding-left: 0;
+    list-style: none;
+}
+
+.ranking li {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.4rem 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.fade {
+    transition: opacity 0.5s ease;
+    opacity: 1;
+}
+
+.fade-out {
+    opacity: 0;
+}

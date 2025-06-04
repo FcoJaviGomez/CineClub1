@@ -1,0 +1,52 @@
+<div class="juego-container">
+    <!-- Pantalla de juego -->
+    <div *ngIf="!juegoTerminado && peliculaActual && siguientePelicula" class="juego-activo fade"
+        [class.fade-out]="animando">
+        <div class="juego-flex">
+
+            <!-- Película A -->
+            <div class="card movie-card">
+                <img [src]="getPosterUrl(peliculaActual.poster_path)" alt="{{ peliculaActual.title }}" />
+                <h2>{{ peliculaActual.title }}</h2>
+                <p class="puntuacion">Puntuación: {{ peliculaActual.vote_average }}</p>
+            </div>
+
+            <!-- Botones centrales -->
+            <div class="botones-centro">
+                <div class="versus">VS</div>
+                <button class="btn menor" (click)="responder('menor')">Menor</button>
+                <button class="btn mayor" (click)="responder('mayor')">Mayor</button>
+                <div class="score">Puntos: {{ puntuacion }}</div>
+                <button class="btn ranking" (click)="mostrarRanking = true">Ver Ranking</button>
+            </div>
+
+            <!-- Película B -->
+            <div class="card movie-card">
+                <img [src]="getPosterUrl(siguientePelicula.poster_path)" alt="{{ siguientePelicula.title }}" />
+                <h2>{{ siguientePelicula.title }}</h2>
+                <p class="puntuacion">¿Mayor o menor?</p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Fin del juego -->
+    <div *ngIf="juegoTerminado" class="juego-fin">
+        <h1>Fin del juego</h1>
+        <p>Tu puntuación: <strong>{{ puntuacion }}</strong></p>
+        <button class="reiniciar" (click)="reiniciarJuego()">Volver a jugar</button>
+        <button class="btn ranking" (click)="mostrarRanking = true">Ver Ranking</button>
+    </div>
+
+    <!-- Modal de Ranking -->
+    <div class="ranking" *ngIf="mostrarRanking && ranking.length > 0">
+        <button class="cerrar-modal" (click)="mostrarRanking = false">×</button>
+        <h2>🏆 Ranking Global</h2>
+        <ol>
+            <li *ngFor="let jugador of ranking">
+                <span>{{ jugador.nombre }}</span>
+                <span>{{ jugador.puntuacion }} pts</span>
+            </li>
+        </ol>
+    </div>
+</div>
