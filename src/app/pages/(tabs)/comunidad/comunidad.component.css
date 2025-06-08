@@ -1,12 +1,23 @@
+body {
+    width: 100%;
+    min-height: 78vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    background-color: var(--fondo);
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
 .chat-container {
     display: flex;
     flex-direction: column;
-    height: 80vh;
-    max-width: 800px;
-    margin: 0 auto;
-    border: 1px solid #ccc;
+    /* width: 200px; */
+    height: 69vh;
+    border: 3px solid red;
     border-radius: 8px;
-    background: #ffffff;
+    width: 70%;
 }
 
 .mensajes {

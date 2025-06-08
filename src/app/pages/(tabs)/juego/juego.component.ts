@@ -20,23 +20,20 @@ interface RankingEntry {
     standalone: true,
     imports: [CommonModule, FormsModule],
     templateUrl: './juego.component.html',
-    styleUrls: ['./juego.component.css']
-
+    styleUrls: ['./juego.component.css'],
 })
 export class JuegoComponent implements OnInit {
+    peliculaActual!: MovieOption;
+    siguientePelicula!: MovieOption;
     opciones: MovieOption[] = [];
     puntuacion = 0;
-    haFallado = false;
+    juegoTerminado = false;
+    mostrandoPuntuacion = false;
     ranking: RankingEntry[] = [];
-    cargando = true;
-    animando = false;
     mostrarRanking = false;
-
-    peliculaA!: MovieOption;
-    peliculaB!: MovieOption;
-
-    // TMDB API Key directa (puedes ocultarla en backend si deseas)
-    private tmdbApiKey = '8e98c3442d72e4400ad45a11f9d635a7';
+    nombreUsuario: string = '';
+    puntuacionPersonal: number = 0;
+    Math = Math;
 
     constructor(
         private http: HttpClient,
@@ -50,56 +47,50 @@ export class JuegoComponent implements OnInit {
     }
 
     async obtenerPeliculas() {
-        const url = `https://api.themoviedb.org/3/movie/popular?api_key=${this.tmdbApiKey}&language=es-ES&page=1`;
+        const url =
+            'https://api.themoviedb.org/3/movie/popular?api_key=8e98c3442d72e4400ad45a11f9d635a7&language=es-ES&page=1';
         const response: any = await this.http.get(url).toPromise();
-        this.opciones = response.results.filter((m: any) => m.vote_count > 100 && m.poster_path);
-        this.cargando = false;
+        this.opciones = response.results.filter(
+            (m: any) => m.vote_count > 100 && m.poster_path
+        );
     }
 
     siguienteRonda() {
         const copia = [...this.opciones];
-        this.peliculaA = copia.splice(Math.floor(Math.random() * copia.length), 1)[0];
-        this.peliculaB = copia.splice(Math.floor(Math.random() * copia.length), 1)[0];
-        this.haFallado = false;
+        this.peliculaActual =
+            copia.splice(Math.floor(Math.random() * copia.length), 1)[0];
+        this.siguientePelicula =
+            copia.splice(Math.floor(Math.random() * copia.length), 1)[0];
+        this.mostrandoPuntuacion = false;
     }
 
     responder(opcion: 'mayor' | 'menor') {
-        const esCorrecto =
-            (opcion === 'mayor' && this.peliculaB.vote_average >= this.peliculaA.vote_average) ||
-            (opcion === 'menor' && this.peliculaB.vote_average <= this.peliculaA.vote_average);
+        this.mostrandoPuntuacion = true;
 
-        if (esCorrecto) {
-            this.animando = true;
-            setTimeout(() => {
+        setTimeout(() => {
+            const correcta =
+                (opcion === 'mayor' &&
+                    this.siguientePelicula.vote_average >=
+                    this.peliculaActual.vote_average) ||
+                (opcion === 'menor' &&
+                    this.siguientePelicula.vote_average <=
+                    this.peliculaActual.vote_average);
+
+            if (correcta) {
                 this.puntuacion++;
                 this.siguienteRonda();
-                this.animando = false;
-            }, 500); // tiempo de la animación (debe coincidir con el CSS)
-        } else {
-            this.haFallado = true;
-            this.guardarPuntuacion();
-        }
-    }
-
-
-    get juegoTerminado(): boolean {
-        return this.haFallado;
-    }
-
-    get peliculaActual(): MovieOption {
-        return this.peliculaA;
-    }
-
-    get siguientePelicula(): MovieOption {
-        return this.peliculaB;
-    }
-
-    getPosterUrl(path: string): string {
-        return `https://image.tmdb.org/t/p/w500${path}`;
+            } else {
+                this.juegoTerminado = true;
+                this.guardarPuntuacion();
+            }
+        }, 2000); // 2 segundos mostrando la puntuación
     }
 
     async guardarPuntuacion() {
-        const { data: { user }, error: userError } = await this.supabase.getUser();
+        const {
+            data: { user },
+            error: userError,
+        } = await this.supabase.getUser();
         if (!user || userError) return;
 
         const { data: perfil } = await this.supabase.client
@@ -117,31 +108,52 @@ export class JuegoComponent implements OnInit {
             .maybeSingle();
 
         if (!actual || this.puntuacion > actual.puntuacion) {
-            await this.supabase.client
-                .from('ranking_juego')
-                .upsert({
-                    usuario_id: perfil.id,
-                    nombre: perfil.nombre,
-                    puntuacion: this.puntuacion
-                });
+            await this.supabase.client.from('ranking_juego').upsert({
+                usuario_id: perfil.id,
+                nombre: perfil.nombre,
+                puntuacion: this.puntuacion,
+            });
         }
     }
 
     async obtenerRanking() {
-        const { data, error } = await this.supabase.client
-            .rpc('ranking_juego_unico')  // función recomendada abajo
+        const { data: { user }, error: userError } = await this.supabase.getUser();
+        if (!user || userError) return;
 
-        if (error) {
-            console.error('Error al cargar ranking:', error);
-            return;
+        const { data: perfil } = await this.supabase.client
+            .from('usuarios')
+            .select('id, nombre')
+            .eq('email', user.email)
+            .maybeSingle();
+
+        if (perfil) {
+            this.nombreUsuario = perfil.nombre;
+
+            const { data: personal } = await this.supabase.client
+                .from('ranking_juego')
+                .select('puntuacion')
+                .eq('usuario_id', perfil.id)
+                .maybeSingle();
+
+            this.puntuacionPersonal = personal?.puntuacion || 0;
         }
 
-        this.ranking = data || [];
+        const { data, error } = await this.supabase.client
+            .rpc('ranking_juego_unico');
+
+        if (!error && data) {
+            this.ranking = data;
+        }
     }
 
-
-    reiniciarJuego() {
+    async reiniciarJuego() {
+        this.juegoTerminado = false;
         this.puntuacion = 0;
+        await this.obtenerPeliculas();
         this.siguienteRonda();
+    }
+
+    getPosterUrl(path: string): string {
+        return `https://image.tmdb.org/t/p/w500${path}`;
     }
 }

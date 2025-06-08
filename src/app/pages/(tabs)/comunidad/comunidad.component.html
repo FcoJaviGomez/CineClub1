@@ -1,58 +1,60 @@
-<div class="chat-container">
-    <div class="mensajes">
-        <ng-container *ngFor="let grupo of mensajesAgrupados()">
-            <div class="fecha-separador">{{ grupo.fecha }}</div>
+<body>
+    <div class="chat-container">
+        <div class="mensajes">
+            <ng-container *ngFor="let grupo of mensajesAgrupados()">
+                <div class="fecha-separador">{{ grupo.fecha }}</div>
 
-            <div *ngFor="let m of grupo.mensajes" class="mensaje"
-                [ngClass]="{ 'mensaje-propio': m.usuario_id === usuarioId, 'mensaje-ajeno': m.usuario_id !== usuarioId }">
+                <div *ngFor="let m of grupo.mensajes" class="mensaje"
+                    [ngClass]="{ 'mensaje-propio': m.usuario_id === usuarioId, 'mensaje-ajeno': m.usuario_id !== usuarioId }">
 
-                <!-- Info del usuario (solo si es otro) -->
-                <div class="info-usuario" *ngIf="m.usuario_id !== usuarioId">
-                    <img [src]="m.avatar_url || 'https://ui-avatars.com/api/?name=' + (m.nombre_usuario || 'Anon')"
-                        class="avatar" alt="avatar">
-                    <span class="nombre">{{ m.nombre_usuario || 'Anónimo' }}</span>
-                </div>
+                    <!-- Info del usuario (solo si es otro) -->
+                    <div class="info-usuario" *ngIf="m.usuario_id !== usuarioId">
+                        <img [src]="m.avatar_url || 'https://ui-avatars.com/api/?name=' + (m.nombre_usuario || 'Anon')"
+                            class="avatar" alt="avatar">
+                        <span class="nombre">{{ m.nombre_usuario || 'Anónimo' }}</span>
+                    </div>
 
-                <!-- MENÚ ⋮ AL HACER HOVER -->
-                <div class="menu-container" *ngIf="m.usuario_id !== usuarioId">
-                    <button class="menu-icon" (click)="toggleMenu(m.id!)">⋮</button>
+                    <!-- MENÚ ⋮ AL HACER HOVER -->
+                    <div class="menu-container" *ngIf="m.usuario_id !== usuarioId">
+                        <button class="menu-icon" (click)="toggleMenu(m.id!)">⋮</button>
 
-                    <div class="menu-opciones" *ngIf="mensajeMenuAbiertoId === m.id">
-                        <button (click)="responderA(m)">Responder</button>
                         <div class="menu-opciones" *ngIf="mensajeMenuAbiertoId === m.id">
-                            <button *ngIf="rol === 'admin'" (click)="eliminarMensaje(m.id)">Eliminar</button>
+                            <button (click)="responderA(m)">Responder</button>
+                            <div class="menu-opciones" *ngIf="mensajeMenuAbiertoId === m.id">
+                                <button *ngIf="rol === 'admin'" (click)="eliminarMensaje(m.id)">Eliminar</button>
+                            </div>
                         </div>
                     </div>
+
+
+                    <!-- Respuesta a otro mensaje -->
+                    <div class="respuesta" *ngIf="m.mensaje_respuesta">
+                        <div class="respuesta-nombre">{{ m.mensaje_respuesta.nombre_usuario || 'Usuario' }}</div>
+                        <div class="respuesta-texto">"{{ m.mensaje_respuesta.contenido | slice:0:60 }}..."</div>
+                    </div>
+
+                    <!-- Contenido del mensaje -->
+                    <div class="burbuja">
+                        <span class="texto">{{ m.contenido }}</span>
+                        <span class="hora" *ngIf="m.creado_en">{{ m.creado_en | date: 'shortTime' }}</span>
+                    </div>
                 </div>
-
-
-                <!-- Respuesta a otro mensaje -->
-                <div class="respuesta" *ngIf="m.mensaje_respuesta">
-                    <div class="respuesta-nombre">{{ m.mensaje_respuesta.nombre_usuario || 'Usuario' }}</div>
-                    <div class="respuesta-texto">"{{ m.mensaje_respuesta.contenido | slice:0:60 }}..."</div>
-                </div>
-
-                <!-- Contenido del mensaje -->
-                <div class="burbuja">
-                    <span class="texto">{{ m.contenido }}</span>
-                    <span class="hora" *ngIf="m.creado_en">{{ m.creado_en | date: 'shortTime' }}</span>
-                </div>
-            </div>
-        </ng-container>
-    </div>
-
-    <!-- Respuesta activa (antes de enviar) -->
-    <div class="respuesta-activa" *ngIf="respondiendoA">
-        <div class="info">
-            <span class="etiqueta">Respondiendo a {{ respondiendoA.nombre_usuario || 'Usuario' }}:</span>
-            <span class="preview">"{{ respondiendoA.contenido | slice:0:60 }}..."</span>
+            </ng-container>
         </div>
-        <button (click)="cancelarRespuesta()">✖</button>
-    </div>
 
-    <!-- Input -->
-    <div class="nuevo-mensaje">
-        <input [(ngModel)]="mensajeNuevo" placeholder="Escribe tu mensaje..." autocomplete="off" />
-        <button (click)="enviar()">Enviar</button>
+        <!-- Respuesta activa (antes de enviar) -->
+        <div class="respuesta-activa" *ngIf="respondiendoA">
+            <div class="info">
+                <span class="etiqueta">Respondiendo a {{ respondiendoA.nombre_usuario || 'Usuario' }}:</span>
+                <span class="preview">"{{ respondiendoA.contenido | slice:0:60 }}..."</span>
+            </div>
+            <button (click)="cancelarRespuesta()">✖</button>
+        </div>
+
+        <!-- Input -->
+        <div class="nuevo-mensaje">
+            <input [(ngModel)]="mensajeNuevo" placeholder="Escribe tu mensaje..." autocomplete="off" />
+            <button (click)="enviar()">Enviar</button>
+        </div>
     </div>
-</div>
+</body>

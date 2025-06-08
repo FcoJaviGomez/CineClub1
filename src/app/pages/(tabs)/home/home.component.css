@@ -46,6 +46,7 @@
 
 .populares_card {
     flex: 0 0 auto;
+    position: relative;
     scroll-snap-align: start;
     height: 280px;
     min-width: 180px;
@@ -140,4 +141,113 @@
     border-radius: 8px;
     border: 1px solid #aaa;
     font-size: 14px;
+}
+
+.sugerencias {
+    background: #fff;
+    border: 1px solid #ccc;
+    max-width: 300px;
+    margin-top: 6px;
+    padding: 0;
+    list-style: none;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    z-index: 1000;
+}
+
+.sugerencias li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+}
+
+.sugerencias li:hover {
+    background-color: #f3f3f3;
+}
+
+.sugerencias img {
+    width: 30px;
+    height: 45px;
+    object-fit: cover;
+    border-radius: 3px;
+}
+
+.buscador-contenedor {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    margin-bottom: 20px;
+    max-width: 100%;
+}
+
+.input-busqueda {
+    padding: 10px 14px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    outline: none;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.resultados-sugeridos {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+    max-width: 400px;
+    width: 100%;
+    margin-inline: auto;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.sugerido {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    padding: 6px 4px;
+    border-radius: 6px;
+    transition: background 0.2s ease;
+}
+
+.sugerido:hover {
+    background-color: #f2f2f2;
+}
+
+.sugerido img {
+    width: 40px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.rating-container {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    background-color: #0f0f0fdd;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 13px;
+    color: white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    z-index: 2;
+}
+
+.rating {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }

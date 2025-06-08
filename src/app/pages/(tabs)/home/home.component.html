@@ -2,6 +2,20 @@
 
 <body class="body" *ngIf="!cargando && peliculasActuales.length && peliculasPopulares.length">
 
+  <!-- Buscador de películas -->
+  <div class="buscador-contenedor">
+    <input type="text" placeholder="Buscar películas..." [(ngModel)]="busqueda" (input)="buscarPeliculasPorNombre()"
+      class="input-busqueda" />
+
+    <div *ngIf="peliculasSugeridas.length > 0" class="resultados-sugeridos">
+      <div class="sugerido" *ngFor="let p of peliculasSugeridas" (click)="irADetalle(p.id)">
+        <img *ngIf="p.poster_path" [src]="'https://image.tmdb.org/t/p/w92' + p.poster_path" />
+        <span>{{ p.title }}</span>
+      </div>
+    </div>
+  </div>
+
+
   <!-- Filtro de géneros -->
   <div class="genero-buscador">
     <label for="genero">Filtrar por género:</label>
@@ -17,14 +31,18 @@
   <!-- Sección de películas populares -->
   <div class="populares">
     <div class="populares_texto">POPULARES</div>
-    <section class="populares_peliculas" #scrollContainer>
+    <section class="populares_peliculas" #scrollContainerRef>
       <a *ngFor="let peliculaPopular of peliculasPopulares" [routerLink]="['/detalle-pelicula', peliculaPopular.id]">
         <div class="populares_card">
+          <div class="rating-container">
+            <span class="rating">{{ Math.round(peliculaPopular.vote_average * 10) }}%</span>
+          </div>
           <img *ngIf="peliculaPopular.poster_path"
             [src]="'https://image.tmdb.org/t/p/w500' + peliculaPopular.poster_path" [alt]="peliculaPopular.title"
             class="populares_imagen">
         </div>
       </a>
+
     </section>
   </div>
 

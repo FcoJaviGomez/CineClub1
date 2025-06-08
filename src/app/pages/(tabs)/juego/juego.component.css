@@ -1,103 +1,282 @@
-.juego-container {
+.juego-hl-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem;
+    background: #000;
+    color: #fff;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.pantalla-juego {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.columna {
+    flex: 1 1 30%;
+}
+
+.columna.pelicula .imagen {
+    max-width: 300px;
+    height: auto;
+    transition: transform 0.3s ease;
+}
+
+.columna.pelicula .imagen:hover {
+    transform: scale(1.05);
+}
+
+
+.titulo {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.sub {
+    font-size: 1rem;
+    color: #ccc;
+}
+
+.valor-principal {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #ffd700;
+}
+
+.valor-pregunta {
+    font-size: 2rem;
+    font-style: italic;
+    color: #aaa;
+}
+
+.columna.centro {
+    align-items: center;
+}
+
+.circulo-vs {
+    background: #fff;
+    color: #000;
+    font-size: 1.3rem;
+    font-weight: bold;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    line-height: 60px;
+    margin: 0 auto 1.5rem;
+}
+
+.btn-hl {
+    display: block;
+    margin: 10px auto;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    width: 140px;
+    transition: 0.3s ease;
+}
+
+.btn-hl.mayor {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-hl.mayor:hover {
+    background-color: #218838;
+}
+
+.btn-hl.menor {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-hl.menor:hover {
+    background-color: #c82333;
+}
+
+.score-hl {
+    font-size: 1.2rem;
+    margin-top: 20px;
+}
+
+.pantalla-fin {
+    text-align: center;
+    padding: 2rem;
+}
+
+.ranking-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #111;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    z-index: 999;
+    width: 90%;
+    max-width: 500px;
+}
+
+.ranking-modal h2 {
+    margin-bottom: 1rem;
+}
+
+.ranking-modal ol {
+    list-style: none;
+    padding: 0;
+}
+
+.ranking-modal li {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #444;
+    padding: 0.5rem 0;
+}
+
+.cerrar-modal {
+    position: absolute;
+    top: 0.5rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: #fff;
+    cursor: pointer;
+}
+
+.animate-reveal {
+    animation: fadeInScale 0.6s ease-in-out;
+}
+
+.pantalla-fin {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 2rem;
-    min-height: 100vh;
-    background: linear-gradient(to bottom, #111, #222);
+    padding: 3rem 2rem;
+    text-align: center;
+    background-color: #111;
+    border-radius: 20px;
+    color: #fff;
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+    animation: zoomIn 0.6s ease;
+}
+
+.pantalla-fin h1 {
+    font-size: 2.5rem;
+    color: #ffd700;
+    margin-bottom: 1rem;
+}
+
+.pantalla-fin p {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.pantalla-fin button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    font-size: 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 0.5rem;
+    transition: background 0.3s ease;
+}
+
+.pantalla-fin button:hover {
+    background-color: #218838;
+}
+
+.pantalla-fin button:last-child {
+    background-color: #007bff;
+}
+
+.pantalla-fin button:last-child:hover {
+    background-color: #0069d9;
+}
+
+.ranking-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #111;
+    padding: 2rem 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.15);
+    z-index: 999;
+    width: 95%;
+    max-width: 600px;
     color: #fff;
     text-align: center;
 }
 
-.juego-activo,
-.juego-fin {
-    max-width: 800px;
-    width: 100%;
+.ranking-modal h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
 }
 
-.card {
-    background: #333;
-    padding: 1rem;
-    margin: 1rem 0;
-    border-radius: 16px;
-    box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
-}
-
-.card img {
-    max-width: 100%;
-    border-radius: 12px;
-}
-
-.versus {
-    font-size: 2rem;
-    margin: 1rem 0;
-}
-
-.botones {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    margin: 1.5rem 0;
-}
-
-.btn {
-    font-size: 1.2rem;
-    padding: 1rem 2rem;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    color: white;
-    transition: background 0.2s ease;
-}
-
-.btn.mayor {
-    background: #28a745;
-}
-
-.btn.mayor:hover {
-    background: #218838;
-}
-
-.btn.menor {
-    background: #dc3545;
-}
-
-.btn.menor:hover {
-    background: #c82333;
-}
-
-.score {
-    font-size: 1.2rem;
-    margin-top: 1rem;
-}
-
-.ranking {
-    margin-top: 2rem;
-    background: rgba(255, 255, 255, 0.05);
-    padding: 1rem;
-    border-radius: 12px;
-    width: 100%;
-    max-width: 500px;
-}
-
-.ranking ol {
-    padding-left: 0;
+.ranking-modal ol {
     list-style: none;
+    padding: 0;
+    margin-bottom: 1.5rem;
 }
 
-.ranking li {
+.ranking-modal li {
     display: flex;
     justify-content: space-between;
-    padding: 0.4rem 1rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.6rem 1rem;
+    border-bottom: 1px solid #444;
+    font-size: 1.1rem;
 }
 
-.fade {
-    transition: opacity 0.5s ease;
-    opacity: 1;
+.estadistica-usuario {
+    background: #222;
+    padding: 1rem;
+    border-radius: 10px;
+    margin-top: 1rem;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
 }
 
-.fade-out {
-    opacity: 0;
+.estadistica-usuario h3 {
+    margin-bottom: 0.5rem;
+    color: #ffd700;
+}
+
+
+@keyframes zoomIn {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }

@@ -7,6 +7,8 @@ import { HttpClient } from '@angular/common/http';
 import { MoviesService } from '../../../services/movies.service';
 import { SupabaseService } from '../../../services/supabase.service';
 import { Movie } from '../../../models/movie.model';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-home',
@@ -18,8 +20,10 @@ import { Movie } from '../../../models/movie.model';
 export class HomeComponent implements OnInit, AfterViewInit {
   peliculasPopulares: Movie[] = [];
   peliculasActuales: Movie[] = [];
+  busqueda: string = '';
+  peliculasSugeridas: any[] = [];
   cargando = true;
-
+  Math = Math;
   favoritos: number[] = [];
   usuarioId: string | null = null;
 
@@ -29,12 +33,33 @@ export class HomeComponent implements OnInit, AfterViewInit {
   filtroGenero: string = '';
   generoSeleccionado: string = '';
 
-  @ViewChild('scrollContainer') scrollContainer!: ElementRef;
+  @ViewChild('scrollContainerRef', { static: true }) scrollContainer!: ElementRef;
+
+  ngAfterViewInit(): void {
+    this.iniciarAutoScroll();
+  }
+
+  iniciarAutoScroll() {
+    const container = this.scrollContainer.nativeElement;
+    let scrollAmount = 0;
+
+    setInterval(() => {
+      scrollAmount += 1;
+      if (scrollAmount >= container.scrollWidth - container.clientWidth) {
+        scrollAmount = 0;
+      }
+      container.scrollTo({
+        left: scrollAmount,
+        behavior: 'smooth'
+      });
+    }, 50); // velocidad ajustable
+  }
 
   constructor(
     private moviesService: MoviesService,
     private supabaseService: SupabaseService,
-    private http: HttpClient
+    private http: HttpClient,
+    private router: Router
   ) { }
 
   async ngOnInit() {
@@ -44,8 +69,24 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.cargarGeneros();
   }
 
-  ngAfterViewInit() {
-    this.activarScrollConArrastre(this.scrollContainer.nativeElement);
+  buscarPeliculasPorNombre() {
+    if (this.busqueda.length < 2) {
+      this.peliculasSugeridas = [];
+      return;
+    }
+
+    this.moviesService.buscarPeliculasPorNombre(this.busqueda).subscribe({
+      next: (res) => {
+        this.peliculasSugeridas = res.results.slice(0, 5); // Limita sugerencias
+      },
+      error: (err) => console.error('Error en búsqueda de películas', err)
+    });
+  }
+
+  irADetalle(id: number) {
+    this.peliculasSugeridas = [];
+    this.busqueda = '';
+    this.router.navigate(['/detalle-pelicula', id]);
   }
 
   cargarPeliculas() {
@@ -88,36 +129,36 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   // ----------- FILTRO POR GÉNERO -------------
 
-cargarGeneros() {
-  this.moviesService.getGenres().subscribe({
-    next: (res) => {
-      this.generos = res.genres;
-      this.generosFiltrados = res.genres;
-    },
-    error: (err) => {
-      console.error('Error al cargar géneros', err);
-    }
-  });
-}
-
- filtrarPeliculasPorGenero() {
-  if (!this.generoSeleccionado) {
-    this.cargarPeliculas();
-    return;
+  cargarGeneros() {
+    this.moviesService.getGenres().subscribe({
+      next: (res) => {
+        this.generos = res.genres;
+        this.generosFiltrados = res.genres;
+      },
+      error: (err) => {
+        console.error('Error al cargar géneros', err);
+      }
+    });
   }
 
-  this.cargando = true;
-  this.moviesService.getMoviesByGenre(this.generoSeleccionado).subscribe({
-    next: (res) => {
-      this.peliculasPopulares = res.results;
-      this.cargando = false;
-    },
-    error: (err) => {
-      console.error('Error al filtrar por género', err);
-      this.cargando = false;
+  filtrarPeliculasPorGenero() {
+    if (!this.generoSeleccionado) {
+      this.cargarPeliculas();
+      return;
     }
-  });
-}
+
+    this.cargando = true;
+    this.moviesService.getMoviesByGenre(this.generoSeleccionado).subscribe({
+      next: (res) => {
+        this.peliculasPopulares = res.results;
+        this.cargando = false;
+      },
+      error: (err) => {
+        console.error('Error al filtrar por género', err);
+        this.cargando = false;
+      }
+    });
+  }
 
   // --------- SCROLL INTERACTIVO ---------
   activarScrollConArrastre(element: HTMLElement) {

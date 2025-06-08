@@ -1,105 +1,75 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError, from } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { HttpClient } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+import { Movie, MovieResponse } from '../models/movie.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MoviesService {
-  private supabase: SupabaseClient;
 
-  private popularesUrl = `${environment.supabaseFnUrl}/get-populares`;
-  private detallesUrl = `${environment.supabaseFnUrl}/get-movie-details`;
-  private actoresUrl  = `${environment.supabaseFnUrl}/get-actores`;
-  private baseUrl = `${environment.supabaseFnUrl}/get-pelicula-genero`;
-  private genresUrl = `${environment.supabaseFnUrl}/get-genero`;
+  private baseUrl = 'https://api.themoviedb.org/3';
+  private apiKey = environment.tmdbApiKey;
+  private language = 'es-ES';
 
+  constructor(private http: HttpClient) { }
 
-  constructor(private http: HttpClient) {
-    this.supabase = createClient(environment.supabaseUrl, environment.supabaseAnonKey);
-  }
-
-  // Agrega token a la cabecera
-  private async crearCabeceraAutorizada(): Promise<HttpHeaders> {
-    const { data } = await this.supabase.auth.getSession();
-    const token = data.session?.access_token || '';
-
-    return new HttpHeaders({ 
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    });
-  }
-
-
-  // POPULARES
-  getPopularMovies(): Observable<any> {
-    return from(this.crearCabeceraAutorizada()).pipe(
-      switchMap(headers => 
-         this.http.get<any>(this.popularesUrl, { headers }).pipe(
-          catchError(error => {
-            console.error('Error al obtener detalles', error);
-            return throwError(() => new Error('Error al obtener los detalles'));
-          })
-        )
-      )
+  getPopularMovies(): Observable<MovieResponse> {
+    const url = `${this.baseUrl}/movie/popular?api_key=${this.apiKey}&language=${this.language}`;
+    return this.http.get<MovieResponse>(url).pipe(
+      catchError(error => {
+        console.error('Error al obtener las películas populares', error);
+        return throwError(() => new Error('Error al obtener las películas'));
+      })
     );
   }
 
-  // DETALLES
-  getMovieDetails(id: string): Observable<any> {
-    return from(this.crearCabeceraAutorizada()).pipe(
-      switchMap(headers =>
-        this.http.post<any>(this.detallesUrl, { id }, { headers }).pipe(
-          catchError(error => {
-            console.error('Error al obtener detalles', error);
-            return throwError(() => new Error('Error al obtener los detalles'));
-          })
-        )
-      )
+  getMovieDetails(id: string): Observable<Movie> {
+    const url = `${this.baseUrl}/movie/${id}?api_key=${this.apiKey}&language=${this.language}`;
+    return this.http.get<Movie>(url).pipe(
+      catchError(error => {
+        console.error(`Error al obtener detalles de la película con ID ${id}`, error);
+        return throwError(() => new Error('Error al obtener los detalles de la película'));
+      })
     );
   }
 
-  // ACTORES
-  getActores(id: string): Observable<any> {
-    return from(this.crearCabeceraAutorizada()).pipe(
-      switchMap(headers =>
-        this.http.post<any>(this.actoresUrl, { id }, { headers }).pipe(
-          catchError(error => {
-            console.error('Error al obtener actores', error);
-            return throwError(() => new Error('Error al obtener actores'));
-          })
-        )
-      )
+  // ✅ Método corregido y tipado
+  getActores(id: string): Observable<{ cast: any[] }> {
+    const url = `${this.baseUrl}/movie/${id}/credits?api_key=${this.apiKey}&language=${this.language}`;
+    return this.http.get<{ cast: any[] }>(url).pipe(
+      catchError(error => {
+        console.error(`Error al obtener el reparto de la película con ID ${id}`, error);
+        return throwError(() => new Error('Error al obtener el reparto de la película'));
+      })
     );
   }
 
   getGenres(): Observable<any> {
-    return from(this.crearCabeceraAutorizada()).pipe(
-      switchMap(headers =>
-        this.http.get<any>(this.genresUrl, { headers }).pipe(
-          catchError(error => {
-            console.error('Error al obtener géneros', error);
-            return throwError(() => new Error('Error al obtener géneros'));
-          })
-        )
-      )
+    const url = `${this.baseUrl}/genre/movie/list?api_key=${this.apiKey}&language=${this.language}`;
+    return this.http.get<any>(url).pipe(
+      catchError(error => {
+        console.error('Error al obtener géneros', error);
+        return throwError(() => new Error('Error al obtener géneros'));
+      })
     );
   }
 
-  getMoviesByGenre(genreId: string): Observable<any> {
-    return from(this.crearCabeceraAutorizada()).pipe(
-      switchMap(headers =>
-        this.http.post<any>(this.baseUrl, { genreId }, { headers }).pipe(
-          catchError(error => {
-            console.error('Error al obtener películas por género', error);
-            return throwError(() => new Error('Error al obtener películas por género'));
-          })
-        )
-      )
+  getMoviesByGenre(genreId: string): Observable<MovieResponse> {
+    const url = `${this.baseUrl}/discover/movie?api_key=${this.apiKey}&language=${this.language}&with_genres=${genreId}`;
+    return this.http.get<MovieResponse>(url).pipe(
+      catchError(error => {
+        console.error('Error al obtener películas por género', error);
+        return throwError(() => new Error('Error al obtener películas por género'));
+      })
     );
+  }
+
+  buscarPeliculasPorNombre(nombre: string): Observable<any> {
+    const url = `${this.baseUrl}/search/movie?query=${encodeURIComponent(nombre)}&api_key=${this.apiKey}&language=${this.language}`;
+    return this.http.get<any>(url);
   }
 
 }

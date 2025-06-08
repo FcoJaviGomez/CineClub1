@@ -1,46 +1,54 @@
-<div class="juego-container">
+<div class="juego-hl-container">
+
     <!-- Pantalla de juego -->
-    <div *ngIf="!juegoTerminado && peliculaActual && siguientePelicula" class="juego-activo fade"
-        [class.fade-out]="animando">
-        <div class="juego-flex">
+    <div *ngIf="!juegoTerminado && peliculaActual && siguientePelicula" class="pantalla-juego">
 
-            <!-- Película A -->
-            <div class="card movie-card">
-                <img [src]="getPosterUrl(peliculaActual.poster_path)" alt="{{ peliculaActual.title }}" />
-                <h2>{{ peliculaActual.title }}</h2>
-                <p class="puntuacion">Puntuación: {{ peliculaActual.vote_average }}</p>
+        <!-- Película A -->
+        <div class="columna pelicula">
+            <h2 class="titulo">“{{ peliculaActual.title }}”</h2>
+            <div class="sub">tiene</div>
+            <div class="valor-principal">{{ Math.round(peliculaActual.vote_average * 10000) }}</div>
+            <div class="sub">de valoración TMDB</div>
+            <img [src]="getPosterUrl(peliculaActual.poster_path)" [alt]="peliculaActual.title" class="imagen" />
+        </div>
+
+        <!-- Centro -->
+        <div class="columna centro">
+            <div class="circulo-vs">VS</div>
+            <button class="btn-hl mayor" (click)="responder('mayor')">Mayor</button>
+            <button class="btn-hl menor" (click)="responder('menor')">Menor</button>
+            <div class="score-hl">Puntos: {{ puntuacion }}</div>
+        </div>
+
+        <!-- Película B -->
+        <div class="columna pelicula">
+            <h2 class="titulo">“{{ siguientePelicula.title }}”</h2>
+
+            <div class="sub">tiene</div>
+
+            <div *ngIf="mostrandoPuntuacion" class="valor-principal animate-reveal">
+                {{ Math.round(siguientePelicula.vote_average * 10000) }}
             </div>
+            <div *ngIf="!mostrandoPuntuacion" class="valor-pregunta">¿?</div>
 
-            <!-- Botones centrales -->
-            <div class="botones-centro">
-                <div class="versus">VS</div>
-                <button class="btn menor" (click)="responder('menor')">Menor</button>
-                <button class="btn mayor" (click)="responder('mayor')">Mayor</button>
-                <div class="score">Puntos: {{ puntuacion }}</div>
-                <button class="btn ranking" (click)="mostrarRanking = true">Ver Ranking</button>
-            </div>
-
-            <!-- Película B -->
-            <div class="card movie-card">
-                <img [src]="getPosterUrl(siguientePelicula.poster_path)" alt="{{ siguientePelicula.title }}" />
-                <h2>{{ siguientePelicula.title }}</h2>
-                <p class="puntuacion">¿Mayor o menor?</p>
-            </div>
-
+            <div class="sub">de valoración TMDB</div>
+            <img [src]="getPosterUrl(siguientePelicula.poster_path)" [alt]="siguientePelicula.title" class="imagen" />
         </div>
     </div>
 
     <!-- Fin del juego -->
-    <div *ngIf="juegoTerminado" class="juego-fin">
+    <div *ngIf="juegoTerminado" class="pantalla-fin">
         <h1>Fin del juego</h1>
         <p>Tu puntuación: <strong>{{ puntuacion }}</strong></p>
-        <button class="reiniciar" (click)="reiniciarJuego()">Volver a jugar</button>
-        <button class="btn ranking" (click)="mostrarRanking = true">Ver Ranking</button>
+        <button (click)="reiniciarJuego()">Volver a jugar</button>
+        <button (click)="mostrarRanking = true">Ver Ranking</button>
     </div>
 
+    <!-- Ranking -->
     <!-- Modal de Ranking -->
-    <div class="ranking" *ngIf="mostrarRanking && ranking.length > 0">
+    <div class="ranking-modal" *ngIf="mostrarRanking && ranking.length > 0">
         <button class="cerrar-modal" (click)="mostrarRanking = false">×</button>
+
         <h2>🏆 Ranking Global</h2>
         <ol>
             <li *ngFor="let jugador of ranking">
@@ -48,5 +56,12 @@
                 <span>{{ jugador.puntuacion }} pts</span>
             </li>
         </ol>
+
+        <div class="estadistica-usuario" *ngIf="nombreUsuario">
+            <h3>🎯 Tu récord</h3>
+            <p><strong>{{ nombreUsuario }}</strong></p>
+            <p>Mejor puntuación: <strong>{{ puntuacionPersonal }}</strong></p>
+        </div>
     </div>
+
 </div>
