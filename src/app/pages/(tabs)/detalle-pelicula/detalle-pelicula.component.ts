@@ -22,7 +22,7 @@ export class DetallePeliculaComponent implements OnInit {
   infoGenres: any[] = [];
   actores: any[] = [];
   cargando = true;
-
+  watchProviders: any[] = [];
   favoritos: number[] = [];
   usuarioId: string | null = null;
 
@@ -53,6 +53,7 @@ export class DetallePeliculaComponent implements OnInit {
       this.cargarActores(id);
       this.cargarResenas(+id);
       this.cargarMiResena(+id);
+      this.cargarProveedores(+id);
     }
   }
 
@@ -246,6 +247,22 @@ export class DetallePeliculaComponent implements OnInit {
       this.nuevoComentario = data.comentario;
     }
   }
+
+  cargarProveedores(id: number) {
+    this.moviesService.getWatchProviders(id).subscribe({
+      next: (res) => {
+        const data = res.results?.ES || res.results?.US;
+        if (data?.flatrate) {
+          this.watchProviders = data.flatrate.map((p: any) => ({
+            ...p,
+            link: data.link
+          }));
+        }
+      },
+      error: (err) => console.error('Error al cargar proveedores', err)
+    });
+  }
+
 
   async enviarResena(tmdb_id: number) {
     const { data: { user } } = await this.supabaseService.getUser();

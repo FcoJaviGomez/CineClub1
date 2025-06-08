@@ -50,6 +50,15 @@
           {{ genre.name }}<span *ngIf="i < infoGenres.length - 1">, </span>
         </span>
       </p>
+
+      <!-- Proveedores de streaming -->
+      <p><strong>Disponible en:</strong></p>
+      <div class="proveedores" *ngIf="watchProviders.length > 0">
+        <a *ngFor="let p of watchProviders" [href]="p.link" target="_blank">
+          <img [src]="'https://image.tmdb.org/t/p/w45' + p.logo_path" [alt]="p.provider_name"
+            [title]="p.provider_name" />
+        </a>
+      </div>
     </div>
   </div>
 

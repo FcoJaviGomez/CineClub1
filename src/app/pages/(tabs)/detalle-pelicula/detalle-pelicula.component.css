@@ -441,6 +441,24 @@
   opacity: 0.5;
 }
 
+.proveedores {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.proveedores img {
+  height: 36px;
+  border-radius: 6px;
+  transition: transform 0.2s ease;
+}
+
+.proveedores img:hover {
+  transform: scale(1.1);
+}
+
+
 @keyframes spin {
   to {
     transform: rotate(360deg);
