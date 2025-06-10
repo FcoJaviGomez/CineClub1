@@ -19,6 +19,10 @@
     color: var(--marron);
 }
 
+.footer_boton:hover {
+    color: var(--blanco);
+}
+
 .footer_texto {
     font-family: 'Orbitron', sans-serif;
     font-size: 18px;
